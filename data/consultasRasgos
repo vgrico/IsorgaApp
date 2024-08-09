@@ -1,0 +1,19 @@
+
+-- Consulta para sacar la media de todos los rasgos de un usuario
+SELECT 
+    ROUND(AVG(rasgo1)) AS media_rasgo1,
+    ROUND(AVG(rasgo2)) AS media_rasgo2,
+    ROUND(AVG(rasgo3)) AS media_rasgo3
+FROM usuario_datos_rasgos where usuario=1
+
+
+-- Consulta para encontrar el id del personaje mas parecido segun las medias anteriores
+SELECT personaje_datos.personaje
+FROM personaje_datos, usuario_datos_rasgos
+ORDER BY 
+    SQRT(
+        POWER(personaje_datos.rasgo1 - 4, 2) +
+        POWER(personaje_datos.rasgo2 - 4, 2) +
+        POWER(personaje_datos.rasgo3 - 5, 2)
+    ) ASC
+LIMIT 1;

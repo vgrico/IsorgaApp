@@ -1,0 +1,41 @@
+{
+  "expo": {
+    "name": "Isorga",
+    "slug": "isorga",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/images/splashIsorga.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splashIsorga.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#584CF4"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.jmiguelgr.Isorga"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/splashIsorga.png",
+        "backgroundColor": "#584CF4"
+      },
+      "package": "com.jmiguelgr.Isorga"
+    },
+    "web": {
+      "favicon": "./assets/images/splashIsorga.png"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d6b6e9f8-f880-4e92-a827-4f7926010974"
+      }
+    },
+    "owner": "jmiguelgr"
+  }
+}
