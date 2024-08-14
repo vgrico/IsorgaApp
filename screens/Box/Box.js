@@ -1,211 +1,185 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    TouchableOpacity,
-    Image,
-} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { COLORS, SIZES } from '../../constants'
-import { useFocusEffect } from '@react-navigation/native'
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS, SIZES } from "../../constants";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Box = ({ navigation }) => {
+  const [userId, setUserId] = useState(null);
+  const [centroId, setCentroId] = useState(null);
+  const [carpetasBox, setCarpetasBox] = useState([]);
+  const [centroNombre, setCentroNombre] = useState("");
 
-    const [userId, setUserId] = useState(null)
-    const [centroId, setCentroId] = useState(null)
-    const [carpetasBox, setCarpetasBox] = useState([])
-    const [centroNombre, setCentroNombre] = useState('')
-
-    useFocusEffect(
-        React.useCallback(() => {
-            const loadUserId = async () => {
-                try {
-                    const userIdFromStorage =
-                        await AsyncStorage.getItem('isorgaId')
-                    setUserId(userIdFromStorage)
-
-                    const centroIdFromStorage =
-                        await AsyncStorage.getItem('centroId')
-                    setCentroId(centroIdFromStorage)
-                } catch (error) {
-                    console.error(
-                        'Error loading userId from AsyncStorage:',
-                        error
-                    )
-                }
-            }
-            loadUserId()
-            return () => {
-                setUserId(null)
-                setCentroId(null)
-            }
-        }, [])
-    )
-
-    useEffect(() => {
-        if (userId && centroId) {
-            console.log('User ID:', userId)
-            console.log('Centro ID:', centroId)
-            fetchCarpetaBox()
-        }
-    }, [userId, centroId])
-
-    const fetchCarpetaBox = async () => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadUserId = async () => {
         try {
-            const response = await fetch(
-                'https://isorga.com/api/carpetasBox.php',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        centroId: centroId,
-                    }),
-                }
-            )
-            const data = await response.json()
-            console.log('Data received:', data) // Añadir este log para depuración
-            setCarpetasBox(data)
-            if (data.length > 0) {
-                setCentroNombre(data[0].centroNombre)
-            }
+          const userIdFromStorage = await AsyncStorage.getItem("isorgaId");
+          setUserId(userIdFromStorage);
+
+          const centroIdFromStorage = await AsyncStorage.getItem("centroId");
+          setCentroId(centroIdFromStorage);
         } catch (error) {
-            console.error('Error fetching modulos:', error)
+          console.error("Error loading userId from AsyncStorage:", error);
         }
-    }
+      };
+      loadUserId();
+      return () => {
+        setUserId(null);
+        setCentroId(null);
+      };
+    }, [])
+  );
 
-    const renderModulo = ({ item }) => {
-        console.log('Render item:', item)
-        return (
-            <TouchableOpacity
-                style={styles.moduloContainer}
-                onPress={() => navigation.navigate('ListadoBox', {id: item.id})}
-            >
-                <Text style={styles.moduloTexto}>{item.titulo}</Text>
-            </TouchableOpacity>
-        )
+  useEffect(() => {
+    if (userId && centroId) {
+      console.log("User ID:", userId);
+      console.log("Centro ID:", centroId);
+      fetchCarpetaBox();
     }
+  }, [userId, centroId]);
 
-    const renderLogo = () => {
-        return (
-            <View style={styles.container}>
-                <Image
-                    source={require('../../assets/images/logoIsorga.png')}
-                    style={styles.logo}
-                />
-            </View>
-        )
+  const fetchCarpetaBox = async () => {
+    try {
+      const response = await fetch("https://isorga.com/api/carpetasBox.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          centroId: centroId,
+        }),
+      });
+      const data = await response.json();
+      console.log("Data received:", data); // Añadir este log para depuración
+      setCarpetasBox(data);
+      if (data.length > 0) {
+        setCentroNombre(data[0].centroNombre);
+      }
+    } catch (error) {
+      console.error("Error fetching modulos:", error);
     }
+  };
 
-    const renderHeader = () => {
-        return (
-            <View style={styles.headerContainer}>
-                <Text style={styles.headerTitle}>BOX DOCUMENTAL</Text>
-                {/* <View style={{ flex: 1 }} />
-                <Image source={require('../../assets/images/logoIsorga.png')} style={styles.logo} /> */}
-            </View>
-        )
-    }
+  const renderModulo = ({ item }) => {
+    const imageSource = require("../../assets/images/carpeta.webp");
+    console.log("Render item:", item);
     return (
-        <SafeAreaView style={styles.area}>
-            {renderLogo()}
-            {renderHeader()}
-            <View style={styles.horizontalLine} />
-            <FlatList
-                data={carpetasBox}
-                renderItem={renderModulo}
-                keyExtractor={(item, index) => index.toString()}
-                numColumns={2}
-                contentContainerStyle={styles.flatListContent}
-                columnWrapperStyle={styles.columnWrapper}
-            />
-        </SafeAreaView>
-    )
-}
+      <TouchableOpacity
+        style={styles.moduloContainer}
+        onPress={() => navigation.navigate("ListadoBox", { id: item.id })}
+      >
+        <Image source={imageSource} style={styles.moduloImagen} />
+        <View style={styles.overlay}>
+          <Text style={styles.moduloTexto}>{item.titulo}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderLogo = () => {
+    return (
+      <View style={styles.container}>
+        <Image
+          source={require("../../assets/images/logoIsorga.png")}
+          style={styles.logo}
+        />
+      </View>
+    );
+  };
+
+  const renderHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <Image
+          source={require("../../assets/images/logoIsorga.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.headerTitle}>BOX DOCUMENTAL</Text>
+      </View>
+    );
+  };
+
+  return (
+    <SafeAreaView style={styles.area}>
+      {renderHeader()}
+      <View style={styles.horizontalLine} />
+      <FlatList
+        data={carpetasBox}
+        renderItem={renderModulo}
+        keyExtractor={(item, index) => index.toString()}
+        numColumns={2}
+        contentContainerStyle={styles.flatListContent}
+        columnWrapperStyle={styles.columnWrapper}
+      />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
-    area: {
-        flex: 1,
-        backgroundColor: COLORS.white,
-    },
-    header: {
-        padding: 16,
-    },
-    headerContainer: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingTop: 20,
-    },
-    headerTitle: {
-        fontSize: SIZES.h2,
-        fontWeight: 'bold',
-        marginLeft: 16,
-    },
-    header: {
-        padding: 16,
-    },
-    centroModulos: {
-        fontSize: 15,
-        fontWeight: 'bold',
-    },
-    backIcon: {
-        height: 24,
-        width: 24,
-    },
-    centroNombre: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: COLORS.black,
-    },
-    flatListContent: {
-        paddingHorizontal: 16,
-    },
-    columnWrapper: {
-        justifyContent: 'space-between',
-        marginBottom: 5,
-    },
-    moduloContainer: {
-        flex: 1,
-        margin: 3,
-        padding: 5, // Aumentar el padding
-        borderRadius: 15,
-        borderWidth: 1,
-        borderColor: COLORS.magenta,
-        justifyContent: 'center',
-        alignItems: 'center',
-        minWidth: '45%', // Ajustar el tamaño mínimo
-        minHeight: 80, // Establecer una altura mínima mayor
-    },
-    moduloTexto: {
-        fontSize: 14, // Aumentar el tamaño de la fuente
-        textAlign: 'center',
-    },
-    horizontalLine: {
-        borderBottomColor: COLORS.black,
-        borderBottomWidth: 1,
-        marginVertical: 10,
-    },
-    container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    logo: {
-        width: 100,
-        height: 100,
-        resizeMode: 'contain',
-    },
-    moduloLogo: {
-        width: 50,
-        height: 50,
-        marginBottom: 15,
-        resizeMode: 'contain',
-    },
-})
+  area: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  headerTitle: {
+    fontSize: SIZES.h2,
+    fontWeight: "bold",
+    marginLeft: 16,
+  },
+  moduloContainer: {
+    flex: 1,
+    margin: 3,
+    borderRadius: 15,
+    overflow: "hidden", // Asegura que la imagen no sobresalga del contenedor
+    minWidth: "45%",
+    minHeight: 120,
+    position: "relative",
+  },
+  moduloImagen: {
+    width: "100%", // La imagen ocupa todo el ancho de la tarjeta
+    height: "100%", // La imagen ocupa todo el alto de la tarjeta
+    position: "absolute",
+    top: 0,
+    left: 0,
+    opacity: 0.5, // Imagen difuminada
+  },
+  overlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.1)", 
+  },
+  moduloTexto: {
+    fontSize: 16, // Aumentar el tamaño de la fuente
+    color: COLORS.greyscale900, // Color blanco para contrastar con la imagen
+    fontWeight: "400",
+    textAlign: "center",
+  },
+  horizontalLine: {
+    borderBottomColor: COLORS.black,
+    borderBottomWidth: 1,
+    marginVertical: 10,
+  },
+  logo: {
+    width: 70,
+    height: 70,
+    resizeMode: "contain",
+  },
+});
 
-export default Box
+export default Box;

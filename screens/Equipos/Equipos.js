@@ -68,7 +68,7 @@ const Equipos = ({ navigation }) => {
                 }
             )
             const data = await response.json()
-            console.log('Data received:', data) // Añadir este log para depuración
+            console.log('Data received:', data) 
             setGruposEquipos(data)
             if (data.length > 0) {
                 setCentroNombre(data[0].centroNombre)
@@ -85,14 +85,15 @@ const Equipos = ({ navigation }) => {
                 style={styles.moduloContainer}
                 onPress={() => navigation.navigate('ListaEquipos', {numero: item.grupoId, titulo:item.grupoTitulo, icono: item.grupoIcono})}
             >
-                        <Image
+                <Image
                     source={{
                         uri: `https://isorga.com/app/images/gcat/${item.grupoIcono}.png`,
                     }}
                     style={styles.logo_grupo}
                 />
-
-                <Text style={styles.moduloTexto}>{item.grupoTitulo}</Text>
+                <View style={styles.overlay}>
+                    <Text style={styles.moduloTexto}>{item.grupoTitulo}</Text>
+                </View>
             </TouchableOpacity>
         )
     }
@@ -118,7 +119,7 @@ const Equipos = ({ navigation }) => {
                         style={styles.backIcon}
                     />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>GRUPOS</Text>
+                <Text style={styles.headerTitle}>MIS EQUIPOS</Text>
                 <View style={{ flex: 1 }} />
                 <Image source={require('../../assets/images/logoIsorga.png')} style={styles.logo} />
             </View>
@@ -126,7 +127,7 @@ const Equipos = ({ navigation }) => {
     }
     return (
         <SafeAreaView style={styles.area}>
-            {renderHeader()}
+         {renderHeader()}
             <View style={styles.horizontalLine} />
             <FlatList
                 data={gruposEquipos}
@@ -160,9 +161,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginLeft: 16,
     },
-    header: {
-        padding: 16,
-    },
     centroModulos: {
         fontSize: 15,
         fontWeight: 'bold',
@@ -170,11 +168,6 @@ const styles = StyleSheet.create({
     backIcon: {
         height: 24,
         width: 24,
-    },
-    centroNombre: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: COLORS.black,
     },
     flatListContent: {
         paddingHorizontal: 16,
@@ -186,17 +179,33 @@ const styles = StyleSheet.create({
     moduloContainer: {
         flex: 1,
         margin: 3,
-        padding: 5, // Aumentar el padding
         borderRadius: 15,
-        borderWidth: 1,
-        borderColor: COLORS.magenta,
+        overflow: 'hidden', // Asegura que la imagen no sobresalga del contenedor
+        minWidth: '45%', // Ajustar el tamaño mínimo
+        minHeight: 120, // Establecer una altura mínima mayor
         justifyContent: 'center',
         alignItems: 'center',
-        minWidth: '45%', // Ajustar el tamaño mínimo
-        minHeight: 80, // Establecer una altura mínima mayor
+    },
+    logo_grupo: {
+        width: 80, // Tamaño fijo para el icono
+        height: 80, // Tamaño fijo para el icono
+        resizeMode: 'contain', // Asegura que la imagen no se distorsione
+        marginBottom: 10, // Espacio entre la imagen y el texto
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)', // Reducir la opacidad para que el icono sea más visible
     },
     moduloTexto: {
-        fontSize: 14, // Aumentar el tamaño de la fuente
+        fontSize: 16, // Aumentar el tamaño de la fuente
+        color: COLORS.white, // Color blanco para contrastar con la imagen
+        fontWeight: 'bold',
         textAlign: 'center',
     },
     horizontalLine: {
@@ -211,17 +220,6 @@ const styles = StyleSheet.create({
     logo: {
         width: 50,
         height: 50,
-        resizeMode: 'contain',
-    },
-    logo_grupo: {
-        width: 30,
-        height: 30,
-        resizeMode: 'contain',
-    },
-    moduloLogo: {
-        width: 50,
-        height: 50,
-        marginBottom: 15,
         resizeMode: 'contain',
     },
 })

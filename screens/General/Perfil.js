@@ -6,9 +6,8 @@ import {
     TouchableOpacity,
     Image,
     Switch,
+    fontFamily
 } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons'
-import { launchImagePicker } from '../../utils/ImagePickerHelper'
 import RBSheet from 'react-native-raw-bottom-sheet'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -16,7 +15,7 @@ import { ScrollView } from 'react-native-virtualized-view'
 
 import SettingsItem from '../../components/SettingsItem'
 import Button from '../../components/Button'
-import { COLORS, SIZES, icons, images, FONTS } from '../../constants'
+import { COLORS, SIZES, icons } from '../../constants'
 
 const Perfil = ({ navigation }) => {
     const refRBSheet = useRef()
@@ -117,15 +116,13 @@ const Perfil = ({ navigation }) => {
         )
     }
 
-    const renderFecha = () => (
-        <View style={styles.container}>
-            <Text style={styles.dateText}>{today}</Text>
-        </View>
-    )
-
     const renderHeader = () => {
         return (
             <View style={styles.headerContainer}>
+                   <Image
+                    source={require('../../assets/images/logoIsorga.png')}
+                    style={styles.logo}
+                />
                 <Text style={styles.headerTitle}>MI PERFIL</Text>
             </View>
         )
@@ -191,8 +188,7 @@ const Perfil = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.area}>
-            {renderLogo()}
-            {/* {renderFecha()} */}
+
             {renderHeader()}
             <View style={styles.horizontalLine} />
             {renderUsuario()}
@@ -317,12 +313,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
-    logo: {
-        height: 32,
-        width: 32,
-        tintColor: COLORS.primary,
-    },
-
     profileContainer: {
         alignItems: 'center',
         borderBottomColor: COLORS.grayscale400,
@@ -379,6 +369,7 @@ const styles = StyleSheet.create({
     },
     settingsContainer: {
         marginVertical: 12,
+        
     },
     settingsItemContainer: {
         width: SIZES.width - 32,
@@ -386,6 +377,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginVertical: 12,
+        fontFamily: 'Urbanistic-Italic',
     },
     leftContainer: {
         flexDirection: 'row',
@@ -499,8 +491,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     logo: {
-        width: 100,
-        height: 100,
+        width: 70,
+        height: 70,
         resizeMode: 'contain',
     },
     moduloLogo: {

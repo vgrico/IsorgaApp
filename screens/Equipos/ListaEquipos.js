@@ -82,8 +82,7 @@ const ListaEquipos = ({ route, navigation }) => {
     const handleSearch = (text) => {
         setSearch(text);
         const filtered = modulosUsuario.filter(item => 
-            item.codigo.toLowerCase().includes(text.toLowerCase()) ||
-            item.titulo.toLowerCase().includes(text.toLowerCase())
+            item.nombre.toLowerCase().includes(text.toLowerCase())
         );
         setFilteredModulos(filtered);
     };
@@ -107,23 +106,12 @@ const ListaEquipos = ({ route, navigation }) => {
 
     const renderModulo = ({ item }) => {
         return (
-            // <TouchableOpacity
-            //     onPress={() => navigation.navigate('Documento', { id: item.id })}
-            // >
-            //     <View style={styles.row}>
-            //         <Text style={[styles.cell, styles.codigoCell]}>{item.nombre} {item.tiponombre}</Text>
-            //         {/* <Text style={[styles.cell, styles.tituloCell]}>{item.tiponombre}</Text> */}
-            //         <Text style={[styles.cell, styles.revisionCell]}>{item.activo ? 'Sí' : 'No'}</Text> 
-            //     </View>
-            // </TouchableOpacity>
             <TouchableOpacity
-            onPress={() => navigation.navigate('Documento', { id: item.id })}
+            onPress={() => navigation.navigate('DatosEquipo', { id: item.id })}
         >
             <View style={styles.row}>
                 <Text style={[styles.cell, styles.codigoCell]}>
                     <Text style={styles.nombreText}>{item.nombre}</Text>  
-                    {/* <View style={styles.horizontalLine} />
-                    <Text style={styles.tiponombreText}> {item.tiponombre}</Text> */}
                 </Text>
                 <Text style={[styles.cell, styles.revisionCell]}>
                     {item.activo ? 'Sí' : 'No'}

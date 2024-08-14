@@ -4,8 +4,8 @@ const onboarding3 = require("../assets/images/onboarding3.png");
 const onboarding4 = require("../assets/images/onboarding4.png");
 const onboarding5 = require("../assets/images/onboarding5.png");
 const onboarding6 = require("../assets/images/onboarding6.png");
-const ornament = require("../assets/images/aniverse.png");
-const logo = require("../assets/images/aniverse.png");
+const ornament = require("../assets/images/logoIsorga.png");
+const logo = require("../assets/images/logoIsorga.png");
 
 const user1 = require("../assets/images/users/user1.jpeg");
 const user2 = require("../assets/images/users/user2.jpeg");

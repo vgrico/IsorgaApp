@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { icons, COLORS, SIZES } from '../../constants'
 
-import VerticalCentros from '../../components/VerticalCentros'
+import VerticalCentros from '../../components/isorga/VerticalCentros'
 
 const Centros = ({ route, navigation }) => {
 
@@ -59,9 +59,9 @@ const Centros = ({ route, navigation }) => {
             console.log(pantalla)
             const series = datos.map((item) => ({
                 id: item.centroId.toString(),
-                centroNombre: item.centroNombre,
-                interno: item.interno,
-                datosCodigo_postal: item.datosCodigo_postal,
+                centroNombre: item.centroNombre.toUpperCase(),
+                // interno: item.interno,
+                // datosCodigo_postal: item.datosCodigo_postal,
                 datosPoblacion: item.datosPoblacion,
             }))
             setSeries(series)
@@ -141,6 +141,10 @@ const Centros = ({ route, navigation }) => {
     const renderHeader = () => {
         return (
             <View style={styles.headerContainer}>
+                   <Image
+                    source={require('../../assets/images/logoIsorga.png')}
+                    style={styles.logo}
+                />
                 <Text style={styles.headerTitle}>MIS CENTROS</Text>
             </View>
         )
@@ -148,7 +152,6 @@ const Centros = ({ route, navigation }) => {
 
     return (
         <SafeAreaView style={styles.area}>
-            {renderLogo()}
             {renderHeader()}
             <TextInput
                     placeholder="Buscar..."
@@ -231,8 +234,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logo: {
-        width: 100,
-        height: 100,
+        width: 70,
+        height: 70,
         resizeMode: 'contain',
     },
     moduloLogo: {

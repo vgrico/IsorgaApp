@@ -1,145 +1,150 @@
-import React, { useState, useEffect } from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { NavigationContainer } from '@react-navigation/native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useState, useEffect } from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import BottomTabNavigation from './BottomTabNavigation'
+import BottomTabNavigation from "./BottomTabNavigation";
 
-import Login from '../screens/General/Login'
-import Perfil from '../screens/General/Perfil'
-import Centros from '../screens/General/Centros'
+import Login from "../screens/General/Login";
+import Perfil from "../screens/General/Perfil";
+import Centros from "../screens/General/Centros";
 
-import ControlDocumental from '../screens/ControlDocumental/ControlDocumental'
-import ManualDocumentos from '../screens/ControlDocumental/ManualDocumentos'
-import Procedimientos from '../screens/ControlDocumental/Procedimientos'
-import Instrucciones from '../screens/ControlDocumental/Instrucciones'
-import Procesos from '../screens/ControlDocumental/Procesos'
-import Formatos from '../screens/ControlDocumental/Formatos'
-import Pendientes from '../screens/ControlDocumental/Pendientes'
-import Documento from '../screens/ControlDocumental/Documento'
+import ControlDocumental from "../screens/ControlDocumental/ControlDocumental";
+import ManualDocumentos from "../screens/ControlDocumental/ManualDocumentos";
+import Procedimientos from "../screens/ControlDocumental/Procedimientos";
+import Instrucciones from "../screens/ControlDocumental/Instrucciones";
+import Procesos from "../screens/ControlDocumental/Procesos";
+import Formatos from "../screens/ControlDocumental/Formatos";
+import Pendientes from "../screens/ControlDocumental/Pendientes";
+import Documento from "../screens/ControlDocumental/Documento";
 
-import NoConformidades from '../screens/NoConformidades/NoConformidades'
+import NoConformidades from "../screens/NoConformidades/NoConformidades";
 
-import Quimicos from '../screens/Quimicos/Quimicos'
-import Fds from '../screens/Quimicos/Fds'
+import Quimicos from "../screens/Quimicos/Quimicos";
+import Fds from "../screens/Quimicos/Fds";
 
-import ListadoBox from '../screens/Box/ListadoBox'
-import DocumentoBox from '../screens/Box/DocumentoBox'
+import ListadoBox from "../screens/Box/ListadoBox";
+import DocumentoBox from "../screens/Box/DocumentoBox";
 
-import RecursosHumanos from '../screens/RecursosHumanos/RecursosHumanos'
-import PersonalFicha from '../screens/RecursosHumanos/PersonalFicha'
-import PersonalGeneral from '../screens/RecursosHumanos/PersonalGeneral'
-import PersonalFormaciones from '../screens/RecursosHumanos/PersonalFormaciones'
-import PersonalPuestos from '../screens/RecursosHumanos/PersonalPuestos'
-import DocumentosPuesto from '../screens/RecursosHumanos/DocumentosPuesto'
+import RecursosHumanos from "../screens/RecursosHumanos/RecursosHumanos";
+import PersonalFicha from "../screens/RecursosHumanos/PersonalFicha";
+import PersonalGeneral from "../screens/RecursosHumanos/PersonalGeneral";
+import PersonalFormaciones from "../screens/RecursosHumanos/PersonalFormaciones";
+import PersonalPuestos from "../screens/RecursosHumanos/PersonalPuestos";
+import DocumentosPuesto from "../screens/RecursosHumanos/DocumentosPuesto";
 
-import InformeNuevo from '../screens/Informes/InformeNuevo'
+import InformeNuevo from "../screens/Informes/InformeNuevo";
 
-import Equipos from '../screens/Equipos/Equipos'
-import ListaEquipos from '../screens/Equipos/ListaEquipos'
+import Equipos from "../screens/Equipos/Equipos";
+import ListaEquipos from "../screens/Equipos/ListaEquipos";
+import DatosEquipo from "../screens/Equipos/DatosEquipo";
+import GeneralEquipos from "../screens/Equipos/GeneralEquipos";
+import PlanificacionesEquipos from "../screens/Equipos/PlanificacionesEquipos";
+import RevisionesEquipos from "../screens/Equipos/RevisionesEquipos";
+// import CalendarioEquipos from '../screens/Equipos/CalendarioEquipos'
 
-const Stack = createNativeStackNavigator()
+import GestionResiduos from "../screens/Residuos/GestionResiduos";
+import MisGestiones from "../screens/Residuos/MisGestiones";
+import MisRetiradas from "../screens/Residuos/MisRetiradas";
+import MisResiduos from "../screens/Residuos/MisResiduos";
+
+const Stack = createNativeStackNavigator();
 
 const AppNavigation = () => {
-    const [isFirstLaunch, setIsFirstLaunch] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
+  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const checkUserId = async () => {
-            try {
-                const userId = await AsyncStorage.getItem('isorgaId')
-                if (userId !== null) {
-                    setIsFirstLaunch(false) // Si existe el ID en AsyncStorage, no es el primer lanzamiento
-                } else {
-                    setIsFirstLaunch(true) // Si no existe el ID en AsyncStorage, es el primer lanzamiento
-                }
-            } catch (error) {
-                console.error('Error checking user ID:', error)
-            } finally {
-                setIsLoading(false) // Finaliza la carga
-            }
+  useEffect(() => {
+    const checkUserId = async () => {
+      try {
+        const userId = await AsyncStorage.getItem("isorgaId");
+        if (userId !== null) {
+          setIsFirstLaunch(false); // Si existe el ID en AsyncStorage, no es el primer lanzamiento
+        } else {
+          setIsFirstLaunch(true); // Si no existe el ID en AsyncStorage, es el primer lanzamiento
         }
+      } catch (error) {
+        console.error("Error checking user ID:", error);
+      } finally {
+        setIsLoading(false); // Finaliza la carga
+      }
+    };
 
-        checkUserId()
-    }, [])
+    checkUserId();
+  }, []);
 
-    if (isLoading) {
-        return null // Renderiza un loader o cualquier otro componente de estado de carga
-    }
+  if (isLoading) {
+    return null; // Renderiza un loader o cualquier otro componente de estado de carga
+  }
 
-    return (
-        <NavigationContainer>
-            <Stack.Navigator
-                screenOptions={{ headerShown: false }}
-                initialRouteName={isFirstLaunch ? 'Login' : 'Main'}
-            >
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={isFirstLaunch ? "Login" : "Main"}
+      >
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Main" component={BottomTabNavigation} />
 
-                <Stack.Screen name="Login" component={Login} />
-                <Stack.Screen name="Main" component={BottomTabNavigation} />
-                
-                <Stack.Screen name="Perfil" component={Perfil} />
-                <Stack.Screen name="Centros" component={Centros} />
-                <Stack.Screen
-                    name="ControlDocumental"
-                    component={ControlDocumental}
-                />
-                <Stack.Screen
-                    name="Quimicos"
-                    component={Quimicos}
-                />
-                <Stack.Screen
-                    name="NoConformidades"
-                    component={NoConformidades}
-                />
-                <Stack.Screen
-                    name="Manual&Documentos"
-                    component={ManualDocumentos}
-                />
-                <Stack.Screen
-                    name="Procedimientos"
-                    component={Procedimientos}
-                />
-                <Stack.Screen name="Documento" component={Documento} />
-                <Stack.Screen name="Fds" component={Fds} />
-                <Stack.Screen name="Procesos" component={Procesos} />
-                <Stack.Screen name="Instrucciones" component={Instrucciones} />
-                <Stack.Screen name="Formatos" component={Formatos} />
-                <Stack.Screen name="Pendientes" component={Pendientes} />
+        <Stack.Screen name="Perfil" component={Perfil} />
+        <Stack.Screen name="Centros" component={Centros} />
+        <Stack.Screen name="ControlDocumental" component={ControlDocumental} />
+        <Stack.Screen name="Quimicos" component={Quimicos} />
+        <Stack.Screen name="NoConformidades" component={NoConformidades} />
+        <Stack.Screen name="Manual&Documentos" component={ManualDocumentos} />
+        <Stack.Screen name="Procedimientos" component={Procedimientos} />
+        <Stack.Screen name="Documento" component={Documento} />
+        <Stack.Screen name="Fds" component={Fds} />
+        <Stack.Screen name="Procesos" component={Procesos} />
+        <Stack.Screen name="Instrucciones" component={Instrucciones} />
+        <Stack.Screen name="Formatos" component={Formatos} />
+        <Stack.Screen name="Pendientes" component={Pendientes} />
 
-                <Stack.Screen name="ListadoBox" component={ListadoBox} />
-                <Stack.Screen name="DocumentoBox" component={DocumentoBox} />
+        <Stack.Screen name="ListadoBox" component={ListadoBox} />
+        <Stack.Screen name="DocumentoBox" component={DocumentoBox} />
 
-                <Stack.Screen name="RecursosHumanos" component={RecursosHumanos} />
+        <Stack.Screen name="RecursosHumanos" component={RecursosHumanos} />
 
-                <Stack.Screen name="PersonalFicha" component={PersonalFicha} />
-                <Stack.Screen name="PersonalGeneral" component={PersonalGeneral} />
-                <Stack.Screen name="PersonalFormaciones" component={PersonalFormaciones} />
-                <Stack.Screen name="PersonalPuestos" component={PersonalPuestos} />
-                <Stack.Screen name="DocumentosPuesto" component={DocumentosPuesto} />
-                
-                <Stack.Screen name="InformeNuevo" component={InformeNuevo} />
+        <Stack.Screen name="PersonalFicha" component={PersonalFicha} />
+        <Stack.Screen name="PersonalGeneral" component={PersonalGeneral} />
+        <Stack.Screen
+          name="PersonalFormaciones"
+          component={PersonalFormaciones}
+        />
+        <Stack.Screen name="PersonalPuestos" component={PersonalPuestos} />
+        <Stack.Screen name="DocumentosPuesto" component={DocumentosPuesto} />
 
-                <Stack.Screen name="Equipos" component={Equipos} />
-                <Stack.Screen name="ListaEquipos" component={ListaEquipos} />
+        <Stack.Screen name="InformeNuevo" component={InformeNuevo} />
 
+        <Stack.Screen name="Equipos" component={Equipos} />
+        <Stack.Screen name="ListaEquipos" component={ListaEquipos} />
+        <Stack.Screen name="DatosEquipo" component={DatosEquipo} />
+        <Stack.Screen name="GeneralEquipos" component={GeneralEquipos} />
+        <Stack.Screen
+          name="PlanificacionesEquipos"
+          component={PlanificacionesEquipos}
+        />
+        <Stack.Screen name="RevisionesEquipos" component={RevisionesEquipos} />
+        {/* <Stack.Screen name="CalendarioEquipos" component={CalendarioEquipos} /> */}
 
-
-            </Stack.Navigator>
-        </NavigationContainer>
-    )
-}
-
-export default AppNavigation
+        <Stack.Screen name="GestionResiduos" component={GestionResiduos} />
+        <Stack.Screen name="MisRetiradas" component={MisRetiradas} />
+        <Stack.Screen name="MisResiduos" component={MisResiduos} />
+        <Stack.Screen name="MisGestiones" component={MisGestiones} />
 
 
 
 
 
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
+export default AppNavigation;
 
-
-
-    {/* <Stack.Screen name="Onboarding1" component={Onboarding1} />
+{
+  /* <Stack.Screen name="Onboarding1" component={Onboarding1} />
         <Stack.Screen name="ForgotPasswordMethods" component={ForgotPasswordMethods} />
         <Stack.Screen name="OTPVerification" component={OTPVerification} />
         <Stack.Screen name="CreateNewPassword" component={CreateNewPassword} />
@@ -241,10 +246,10 @@ export default AppNavigation
         <Stack.Screen name="PerfilUsuario" component={PerfilUsuario} />
         <Stack.Screen name="EnterYourPIN" component={EnterYourPIN} />
 
-         */}
+         */
+}
 
-
-         // import Personajes from '../screens/mios/Personajes';
+// import Personajes from '../screens/mios/Personajes';
 // import Series from '../screens/mios/Series';
 // import DetallesSeries from '../screens/mios/DetallesSeries';
 // import ComentariosSerie from '../screens/mios/ComentariosSerie';
