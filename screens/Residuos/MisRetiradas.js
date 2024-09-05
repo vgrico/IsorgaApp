@@ -70,8 +70,9 @@ const MisRetiradas = ({ navigation }) => {
     setSearch(text);
     const filtered = misRetiradas.filter(
       (item) =>
-        item.residuo_nombre.toLowerCase().includes(text.toLowerCase()) ||
-        item.gestion .toLowerCase().includes(text.toLowerCase())
+        item.gestion_nombre?.toLowerCase().includes(text.toLowerCase()) ||
+        item.gestion?.toString().toLowerCase().includes(text.toLowerCase()) ||
+        item.fecha?.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredRetiradas(filtered);
   };
@@ -99,14 +100,32 @@ const MisRetiradas = ({ navigation }) => {
   const renderModulo = ({ item }) => {
     return (
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>G-{item.codigo_gestion} {item.gestion} {item.gestion_nombre}</Text>
-        {/* <Text style={styles.cardSubtitle}>{item.codigo_gestion}</Text> */}
-        <Text style={styles.cardSubtitle}>Fecha: {item.fecha}</Text>
+        <Text style={styles.cardTitle}>
+          G-{item.codigo_gestion} {item.gestion} {item.gestion_nombre}
+        </Text>
+        <Text style={styles.cardTitulo}>
+          FECHA RETIRADA:
+          <Text style={styles.cardSubtitle}>{item.fecha}</Text>
+        </Text>
         <View style={styles.horizontalLine} />
-      
-        <Text style={styles.cardText}>Matricula: {item.matricula} {item.transportista_nombre}</Text>
-        <Text style={styles.cardText}>Documento: {item.documento}</Text>
-        <Text style={styles.cardText}>Cantidad: {item.cantidad}</Text>
+
+        <Text style={styles.cardTitulo}>
+          MATRÍCULA:
+          <Text style={styles.cardText}>{item.matricula}</Text>
+        </Text>
+        <Text style={styles.cardTitulo}>
+          TRANSPORTISTA:
+          <Text style={styles.cardText}>{item.transportista_nombre}</Text>
+        </Text>
+        <Text style={styles.cardTitulo}>
+          DOCUMENTO:
+          <Text style={styles.cardText}>{item.documento}</Text>
+        </Text>
+        <Text style={styles.cardTitulo}>
+          CANTIDAD:
+          <Text style={styles.cardText}>{item.cantidad}</Text>
+        </Text>
+       
         <View style={styles.horizontalLine} />
         <Text style={styles.cardSubText}>{item.usuarioNombre}</Text>
       </View>
@@ -184,28 +203,28 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondaryWhite,
   },
   flatListContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 1,
   },
   table: {
     flex: 1,
     paddingHorizontal: 16,
   },
   card: {
-    backgroundColor: COLORS.secondaryWhite,
-    borderRadius: 10,
-    padding: 5,
-    marginVertical: 5,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 2,
+    backgroundColor: "#fff", // Fondo blanco para la tarjeta
+    borderRadius: 5, // Bordes ligeramente redondeados
+    borderWidth: 2, // Ancho del borde
+    borderColor: "#ADD8E6", // Borde azul claro (puedes ajustar el color)
+    padding: 10, // Espaciado interno
+    marginVertical: 10,
+    marginHorizontal: 10, // Espaciado entre tarjetas
+  },
+  row: {
+    flexDirection: "row", // Alineación en fila
+    justifyContent: "space-between", // Distribución entre el número y el estado
+    alignItems: "center", // Alineación vertical centrada
   },
   cardTitle: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: COLORS.primary,
     marginBottom: 5,
@@ -218,8 +237,13 @@ const styles = StyleSheet.create({
   },
   cardText: {
     fontSize: 10,
-    color: COLORS.black,
-    marginBottom: 5,
+    color: "#333", // Color para el texto normal
+    fontWeight: "normal", // Peso de la fuente para el texto normal
+  },
+  cardTitulo: {
+    fontSize: 8,
+    color: "#333", // Color para el texto normal
+    fontWeight: "semibold", // Peso de la fuente para el texto normal
   },
   cardSubText: {
     fontSize: 8,
@@ -232,10 +256,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: "center",
     color: COLORS.white,
-    backgroundColor: COLORS.lightGray, 
+    backgroundColor: COLORS.lightGray,
   },
   peligroso: {
-    backgroundColor: COLORS.red, 
+    backgroundColor: COLORS.red,
   },
   horizontalLine: {
     borderBottomColor: COLORS.black,

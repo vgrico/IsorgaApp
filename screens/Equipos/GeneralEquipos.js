@@ -16,7 +16,6 @@ const GeneralEquipos = ({ navigation }) => {
   const [userId, setUserId] = useState(null);
   const [centroId, setCentroId] = useState(null);
 
-
   useEffect(() => {
     const loadUserData = async () => {
       try {
@@ -52,19 +51,35 @@ const GeneralEquipos = ({ navigation }) => {
         },
   ];
 
-  const renderModulo = ({ item }) => {
+  const colorPalette = [
+    '#88B04B', // Green
+    '#92A8D1', // Blue
+    '#F7CAC9', // Rose
+    '#009B77', // Teal
+    '#FF6F61', // Coral
+    '#6B5B95', // Plum
+    '#955251', // Mauve
+    '#B565A7', // Violet
+    '#DD4124', // Red
+    '#D65076', // Pink
+  ];
+
+  const renderModulo = ({ item, index }) => {
+    const isCalendario = item.moduloTexto === "CALENDARIO";
+    const backgroundColor = colorPalette[index % colorPalette.length]; // Cicla los colores si hay más cajas que colores
+
     return (
       <TouchableOpacity
-        style={styles.moduloContainer}
+        style={[
+          styles.moduloContainer,
+          {backgroundColor},
+          isCalendario && styles.calendarioContainer, 
+        ]}
         onPress={() => navigation.navigate(item.url)}
       >
-         <Image
-  source={require('../../assets/images/equipos.webp')}
-  style={[styles.moduloImagen, { opacity: 0.4 }]} // 0.1 es muy transparente, ajusta según lo necesites
-/>
          <View style={styles.overlay}>
-          <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
-        </View>
+           <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
+         </View>
       </TouchableOpacity>
     );
   };
@@ -121,19 +136,17 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   headerTitle: {
-    fontSize: SIZES.h3,
+    fontSize: SIZES.h4,
     fontWeight: "bold",
     marginLeft: 16,
   },
   backIcon: {
     height: 18,
     width: 18,
-    // tintColor: COLORS.black,
   },
   centroNombre: {
     fontSize: 15,
     fontWeight: "bold",
-    // color: COLORS.black,
   },
   flatListContent: {
     paddingHorizontal: 16,
@@ -143,13 +156,18 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   moduloContainer: {
-    flex: 1,
-    margin: 3,
+    width: "45%",
+    height: 150,
+    margin: 10,
     borderRadius: 15,
     overflow: "hidden",
-    minWidth: "45%",
-    minHeight: 120,
-    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.grayscale100,
+  },
+  calendarioContainer: {
+    width: "96%", 
+    marginLeft: "2%",
   },
   moduloImagen: {
     width: "100%",
@@ -164,12 +182,12 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.1)", 
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
   },
   moduloTexto: {
-    fontSize: SIZES.h3,
+    fontSize: SIZES.h5,
     color: COLORS.greyscale900,
-    fontWeight: 'bold',
+    fontWeight: 'semibold',
     textAlign: "center",
     textTransform: "uppercase",
   },

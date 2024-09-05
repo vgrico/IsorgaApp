@@ -16,6 +16,7 @@ import { COLORS, SIZES, icons } from "../../constants";
 
 const DatosEquipo = ({ route, navigation }) => {
   const { id } = route.params;
+  console.log("Received ID:", id);
 
   const [userId, setUserId] = useState(null);
   const [centroId, setCentroId] = useState(null);
@@ -57,16 +58,14 @@ const DatosEquipo = ({ route, navigation }) => {
         }),
       });
       const data = await response.json();
-      console.log("Received document:", data); 
+      console.log("Received document:", data);
       setEquipo(data);
-
     } catch (error) {
       console.error("Error fetching documento:", error);
     } finally {
       setLoading(false);
     }
   };
-
 
   if (loading || !id) {
     return (
@@ -88,10 +87,12 @@ const DatosEquipo = ({ route, navigation }) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>{equipo.nombre}</Text>
         <View style={{ flex: 1 }} />
+        <TouchableOpacity onPress={() => navigation.navigate('Inicio')}>
         <Image
           source={require("../../assets/images/logoIsorga.png")}
           style={styles.logo}
         />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -111,44 +112,68 @@ const DatosEquipo = ({ route, navigation }) => {
             resizeMode="contain"
           />
         ) : (
-          <Text style={styles.value}>No hay foto disponible</Text>
+          <Text style={styles.noImageText}>No hay foto disponible</Text>
         )}
 
+        <View style={styles.horizontalLine} />
+
+        <View style={styles.card}>
+          <Text style={styles.label}>REFERENCIA:</Text>
+          <Text style={styles.value}>{equipo.referencia}</Text>
+
+          <Text style={styles.label}>OBSERVACIONES</Text>
+          <Text style={styles.value}>{equipo.observaciones}</Text>
+        </View>
 
         <View style={styles.horizontalLine} />
 
-      
-        <Text style={styles.label}>REFERENCIA:</Text>
-        <Text style={styles.value}>{equipo.referencia}</Text>
+        <View style={styles.card}>
+  <View style={styles.row}>
+    <View style={styles.column}>
+      <Text style={styles.label}>ACTIVO</Text>
+      <Text style={styles.value}>{equipo.activo == 1 ? "SI" : "NO"}</Text>
+    </View>
+    <View style={styles.column}>
+      {equipo.activo == 1 ? (
+        <>
+          <Text style={styles.label}>FECHA ALTA</Text>
+          <Text style={styles.value}>{equipo.fecha}</Text>
+        </>
+      ) : (
+        <>
+          <Text style={styles.label}>FECHA BAJA</Text>
+          <Text style={styles.value}>{equipo.fecha_baja}</Text> 
+        </>
+      )}
+    </View>
+  </View>
 
-        <Text style={styles.label}>OBSERVACIONES</Text>
-        <Text style={styles.value}>
-          {equipo.observaciones}
-        </Text>
+  <View style={styles.horizontalLine} />
 
-        <Text style={styles.label}>FECHA ALTA</Text>
-        <Text style={styles.value}>{equipo.fecha}</Text>
+  <View style={styles.row}>
+    <View style={styles.column}>
+      <Text style={styles.label}>LEGALIZADO</Text>
+      <Text style={styles.value}>{equipo.legalizado == 1 ? "SI" : "NO"}</Text>
+    </View>
+    <View style={styles.column}>
+      <Text style={styles.label}>REGLAMENTARIO</Text>
+      <Text style={styles.value}>{equipo.reglamentario == 1 ? "SI" : "NO"}</Text>
+    </View>
+  </View>
+</View>
 
         <View style={styles.horizontalLine} />
 
-        <Text style={styles.label}>ACTIVO</Text>
-        <Text style={styles.value}>{equipo.activo == 1 ? "SI" : "NO"}</Text>
-        {equipo.activo == 0 && (
-          <>
-            <Text style={styles.label}>FECHA BAJA</Text>
-            <Text style={styles.value}>{equipo.motivo}</Text>
-          </>
-        )}
-        <Text style={styles.label}>LEGALIZADO</Text>
-        <Text style={styles.value}>{equipo.legalizado == 1 ? "SI" : "NO"}</Text>
-
-        <Text style={styles.label}>REGLAMENTARIO</Text>
-        <Text style={styles.value}>
-          {equipo.reglamentario == 1 ? "SI" : "NO"}
-        </Text>
-
-        <View style={styles.horizontalLine} />
-
+        <TouchableOpacity
+          style={styles.revisionButton}
+          onPress={() =>
+            navigation.navigate("RevisionesEquipo", { id: equipo.id })
+          }
+        >
+          <Text style={styles.revisionButtonText}>
+            Ver Revisiones del Equipo
+          </Text>
+        </TouchableOpacity>
       </ScrollView>
       <Modal
         visible={modalVisible}
@@ -213,11 +238,52 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 15,
+    marginVertical: 10,
+    marginHorizontal: 1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  cardTitle: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginBottom: 5,
+  },
+  cardSubtitle: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: COLORS.darkGray,
+    marginBottom: 10,
+  },
+  cardText: {
+    fontSize: 12,
+    color: COLORS.black,
+    marginBottom: 5,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Esto asegura que las columnas se distribuyan a lo largo de la fila
+    marginBottom: 10, // Espacio entre las filas
+  },
+  column: {
+    flex: 1, // Cada columna ocupa la mitad del espacio
+    paddingHorizontal: 5, // Añade espacio interno
+  },
   label: {
     fontWeight: "bold",
-    fontSize: 10,
+    fontSize: 8,
     color: COLORS.black,
-    marginTop: 8,
+    marginBottom: 4,
   },
   value: {
     fontSize: 14,
@@ -300,6 +366,18 @@ const styles = StyleSheet.create({
     top: 40,
     right: 20,
     zIndex: 1,
+  },
+  revisionButton: {
+    backgroundColor: COLORS.primary, // Cambia según tu preferencia
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  revisionButtonText: {
+    color: COLORS.white,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
 

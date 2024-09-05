@@ -69,33 +69,6 @@ const Box = ({ navigation }) => {
     }
   };
 
-  const renderModulo = ({ item }) => {
-    const imageSource = require("../../assets/images/carpeta.webp");
-    console.log("Render item:", item);
-    return (
-      <TouchableOpacity
-        style={styles.moduloContainer}
-        onPress={() => navigation.navigate("ListadoBox", { id: item.id })}
-      >
-        <Image source={imageSource} style={styles.moduloImagen} />
-        <View style={styles.overlay}>
-          <Text style={styles.moduloTexto}>{item.titulo}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const renderLogo = () => {
-    return (
-      <View style={styles.container}>
-        <Image
-          source={require("../../assets/images/logoIsorga.png")}
-          style={styles.logo}
-        />
-      </View>
-    );
-  };
-
   const renderHeader = () => {
     return (
       <View style={styles.headerContainer}>
@@ -103,8 +76,40 @@ const Box = ({ navigation }) => {
           source={require("../../assets/images/logoIsorga.png")}
           style={styles.logo}
         />
+
         <Text style={styles.headerTitle}>BOX DOCUMENTAL</Text>
       </View>
+    );
+  };
+
+  const colorPalette = [
+    '#FF6F61', // Coral
+    '#92A8D1', // Blue
+    '#88B04B', // Green
+    '#F7CAC9', // Rose
+    '#955251', // Mauve
+    '#B565A7', // Violet
+    '#6B5B95', // Plum
+    '#009B77', // Teal
+    '#DD4124', // Red
+    '#D65076', // Pink
+  ];
+
+  const renderModulo = ({ item, index }) => {
+    const imageSource = require("../../assets/images/carpeta.webp");
+    console.log("Render item:", item);
+    const backgroundColor = colorPalette[index % colorPalette.length]; // Cicla los colores si hay más cajas que colores
+
+    return (
+      <TouchableOpacity
+      style={[styles.moduloContainer, { backgroundColor }]}
+        onPress={() => navigation.navigate("ListadoBox", { id: item.id })}
+      >
+      
+        <View style={styles.overlay}>
+          <Text style={styles.moduloTexto}>{item.titulo}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -137,38 +142,41 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   headerTitle: {
-    fontSize: SIZES.h2,
+    fontSize: SIZES.h3,
     fontWeight: "bold",
     marginLeft: 16,
   },
   moduloContainer: {
-    flex: 1,
-    margin: 3,
+    width: "45%",
+    height: 150,
+    margin: 10,
     borderRadius: 15,
-    overflow: "hidden", // Asegura que la imagen no sobresalga del contenedor
-    minWidth: "45%",
-    minHeight: 120,
-    position: "relative",
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.grayscale100,
   },
   moduloImagen: {
-    width: "100%", // La imagen ocupa todo el ancho de la tarjeta
-    height: "100%", // La imagen ocupa todo el alto de la tarjeta
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  overlay: {
     position: "absolute",
     top: 0,
     left: 0,
-    opacity: 0.5, // Imagen difuminada
-  },
-  overlay: {
-    flex: 1,
+    right: 0,
+    bottom: 0,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.1)", 
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
   },
   moduloTexto: {
-    fontSize: 16, // Aumentar el tamaño de la fuente
-    color: COLORS.greyscale900, // Color blanco para contrastar con la imagen
-    fontWeight: "400",
+    fontSize: SIZES.h5,
+    color: COLORS.greyscale900,
+    fontWeight: "semibold",
     textAlign: "center",
+    textTransform: "uppercase",
   },
   horizontalLine: {
     borderBottomColor: COLORS.black,

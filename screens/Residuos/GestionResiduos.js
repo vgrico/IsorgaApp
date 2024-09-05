@@ -49,21 +49,18 @@ const GestionResiduos = ({ navigation }) => {
       moduloTexto: "MIS GESTIONES",
       color: COLORS.grayscale100,
       url: "MisGestiones",
-      tipoDocumento: "1",
       imagen: require("../../assets/images/misGestiones.webp"),
     },
     {
       moduloTexto: "MIS RESIDUOS",
       color: COLORS.grayscale100,
       url: "MisResiduos",
-      tipoDocumento: "2",
       imagen: require("../../assets/images/misResiduos.webp"),
     },
     {
       moduloTexto: "RETIRADA RESIDUOS",
       color: COLORS.grayscale100,
       url: "MisRetiradas",
-      tipoDocumento: "3",
       imagen: require("../../assets/images/misRetiradas.webp"),
     },
   ];
@@ -96,19 +93,21 @@ const GestionResiduos = ({ navigation }) => {
   };
 
   const renderModulo = ({ item, index }) => {
-    const isThirdItem = index === 2; // Verifica si es el tercer elemento
+    const isRetirada = item.moduloTexto === "RETIRADA RESIDUOS";
   
     return (
       <TouchableOpacity
         style={[
           styles.moduloContainer,
-          { backgroundColor: item.color },
-          isThirdItem && styles.fullWidthModuloContainer, 
+          isRetirada && styles.retiradasContainer, 
         ]}
         onPress={() => navigation.navigate(item.url)}
       >
-        <Image source={item.imagen} style={styles.moduloImagen} />
-        <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
+        <Image  source={require('../../assets/images/equipos.webp')}
+           style={[styles.moduloImagen, { opacity: 0.4 }]} />
+         <View style={styles.overlay}>
+           <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
+         </View>
       </TouchableOpacity>
     );
   };
@@ -185,17 +184,18 @@ const styles = StyleSheet.create({
       marginBottom: 5,
     },
     moduloContainer: {
-      width: "45%", // Ancho fijo de la tarjeta
-      height: 200, // Alto fijo de la tarjeta
+      width: "45%",
+      height: 150,
       margin: 10,
       borderRadius: 15,
-      overflow: "hidden", 
+      overflow: "hidden",
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: COLORS.grayscale100,
     },
-    fullWidthModuloContainer: {
-      width: "100%",
+    retiradasContainer: {
+      width: "96%", 
+      marginLeft: "2%",
     },
     moduloImagen: {
       width: "100%",
@@ -210,13 +210,14 @@ const styles = StyleSheet.create({
       bottom: 0,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.3)",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
     },
     moduloTexto: {
-      fontSize: 20,
-      color: COLORS.white,
-      fontWeight: "bold",
+      fontSize: SIZES.h4,
+      color: COLORS.greyscale900,
+      fontWeight: 'bold',
       textAlign: "center",
+      textTransform: "uppercase",
     },
     horizontalLine: {
       borderBottomColor: COLORS.black,

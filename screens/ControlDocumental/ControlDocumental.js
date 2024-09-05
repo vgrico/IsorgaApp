@@ -84,6 +84,19 @@ const ControlDocumental = ({ navigation }) => {
     },
   ];
 
+  const colorPalette = [
+    '#88B04B', // Green
+    '#92A8D1', // Blue
+    '#F7CAC9', // Rose
+    '#009B77', // Teal
+    '#B565A7', // Violet
+    '#FF6F61', // Coral
+    '#955251', // Mauve
+    '#6B5B95', // Plum
+    '#DD4124', // Red
+    '#D65076', // Pink
+  ];
+
   const fetchRevisiones = async () => {
     try {
       setLoading(true);
@@ -110,18 +123,15 @@ const ControlDocumental = ({ navigation }) => {
     }
   };
 
-  const renderModulo = ({ item }) => {
+  const renderModulo = ({ item, index }) => {
+    const backgroundColor = colorPalette[index % colorPalette.length]; // Cicla los colores si hay más cajas que colores
     const isPendientes = item.tipoDocumento === "0" && hayRevision > 0;
     return item.tipoDocumento !== "0" ||
       isPendientes ? (
       <TouchableOpacity
-        style={[styles.moduloContainer, { backgroundColor: item.color },  isPendientes && styles.redBorder ]}
+        style={[styles.moduloContainer, { backgroundColor },  isPendientes && styles.redBorder ]}
         onPress={() => navigation.navigate(item.url)}
       >
-        <Image
-          source={require("../../assets/images/iso.webp")}
-          style={[styles.moduloImagen, { opacity: 0.4 }]}
-        />
         <View style={styles.overlay}>
           <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
         </View>
@@ -141,10 +151,12 @@ const ControlDocumental = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>CONTROL DOCUMENTAL</Text>
         <View style={{ flex: 1 }} />
-        <Image
-          source={require("../../assets/images/logoIsorga.png")}
-          style={styles.logo}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate("Inicio")}>
+          <Image
+            source={require("../../assets/images/logoIsorga.png")}
+            style={styles.logo}
+          />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -181,7 +193,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   headerTitle: {
-    fontSize: SIZES.h3,
+    fontSize: SIZES.h4,
     fontWeight: "bold",
     marginLeft: 16,
   },
@@ -202,7 +214,7 @@ const styles = StyleSheet.create({
   },
   moduloContainer: {
     width: "45%", 
-    height: 200, 
+    height: 150, 
     margin: 10,
     borderRadius: 15,
     overflow: "hidden", 
@@ -226,9 +238,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.1)",
   },
   moduloTexto: {
-    fontSize: SIZES.h3,
+    fontSize: SIZES.h5,
     color: COLORS.greyscale900,
-    fontWeight: 'bold',
+    fontWeight: 'semibold',
     textAlign: "center",
     textTransform: "uppercase",
   },

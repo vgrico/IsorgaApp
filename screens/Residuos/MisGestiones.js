@@ -88,10 +88,12 @@ const MisGestiones = ({ navigation }) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}> Mis Gestiones</Text>
         <View style={{ flex: 1 }} />
-        <Image
-          source={require("../../assets/images/logoIsorga.png")}
-          style={styles.logo}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate("Inicio")}>
+          <Image
+            source={require("../../assets/images/logoIsorga.png")}
+            style={styles.logo}
+          />
+        </TouchableOpacity>
       </View>
     );
   };
@@ -100,8 +102,8 @@ const MisGestiones = ({ navigation }) => {
   const renderModulo = ({ item }) => {
     return (
       <View style={styles.card}>
+        
         <Text style={styles.cardTitle}>{item.codigo_gestion} {item.nombre_gestion}</Text>
-        {/* <Text style={styles.cardSubtitle}>{item.codigo_gestion}</Text> */}
         <Text style={styles.cardSubtitle}>Residuo: {item.residuo_nombre}</Text>
         <View style={styles.horizontalLine} />
         <Text style={styles.cardText}>Gestor: {item.gestor_nombre}</Text>
@@ -181,28 +183,28 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondaryWhite,
   },
   flatListContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 1,
   },
   table: {
     flex: 1,
     paddingHorizontal: 16,
   },
   card: {
-    backgroundColor: COLORS.secondaryWhite,
-    borderRadius: 10,
-    padding: 20,
+    backgroundColor: "#fff", // Fondo blanco para la tarjeta
+    borderRadius: 5, // Bordes ligeramente redondeados
+    borderWidth: 2, // Ancho del borde
+    borderColor: "#ADD8E6", // Borde azul claro (puedes ajustar el color)
+    padding: 10, // Espaciado interno
     marginVertical: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
+    marginHorizontal: 10, // Espaciado entre tarjetas
+  },
+  row: {
+    flexDirection: "row", // Alineación en fila
+    justifyContent: "space-between", // Distribución entre el número y el estado
+    alignItems: "center", // Alineación vertical centrada
   },
   cardTitle: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: "bold",
     color: COLORS.primary,
     marginBottom: 5,

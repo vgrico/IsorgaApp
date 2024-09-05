@@ -94,7 +94,12 @@ const Quimicos = ({ route, navigation }) => {
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>PRODUCTOS QUIMICOS</Text>
                 <View style={{ flex: 1 }} />
-                <Image source={require('../../assets/images/logoIsorga.png')} style={styles.logo} />
+                <TouchableOpacity onPress={() => navigation.navigate("Inicio")}>
+          <Image
+            source={require("../../assets/images/logoIsorga.png")}
+            style={styles.logo}
+          />
+        </TouchableOpacity>
             </View>
         );
     };

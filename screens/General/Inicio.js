@@ -10,9 +10,9 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { COLORS, FONTS, SIZES } from "../../constants"; // Asegúrate de tener estos valores definidos
+import { COLORS, FONTS, SIZES } from "../../constants";
 
-const Inicio = ({ route, navigation }) => {
+const RequisitosDashboard = ({ route, navigation }) => {
   const [userId, setUserId] = useState(null);
   const [centroId, setCentroId] = useState(null);
   const [modulosUsuario, setModulosUsuario] = useState([]);
@@ -68,6 +68,19 @@ const Inicio = ({ route, navigation }) => {
     }
   }, [userId, centroId]);
 
+  const colorPalette = [
+    '#88B04B', // Green
+    '#92A8D1', // Blue
+    '#F7CAC9', // Rose
+    '#009B77', // Teal
+    '#FF6F61', // Coral
+    '#6B5B95', // Plum
+    '#955251', // Mauve
+    '#B565A7', // Violet
+    '#DD4124', // Red
+    '#D65076', // Pink
+  ];
+
   const fetchModulosUsuario = async () => {
     try {
       setLoading(true);
@@ -97,9 +110,18 @@ const Inicio = ({ route, navigation }) => {
     }
   };
 
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={COLORS.text} />
+      </SafeAreaView>
+    );
+  }
+
+
   const renderHeader = () => (
     <View style={styles.headerContainer}>
-        <Image
+      <Image
         source={require("../../assets/images/logoIsorga.png")}
         style={styles.logo}
       />
@@ -108,81 +130,20 @@ const Inicio = ({ route, navigation }) => {
   );
 
   const renderModulo = ({ item, index }) => {
-    let imageSource;
-    let moduloTexto;
-  
-    switch (item.pantalla) {
-      case "RequisitosLegales":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Requisitos Legales";
-        break;
-      case "GestionResiduos":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Residuos";
-        break;
-      case "NoConformidades":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "No Conformidades";
-        break;
-      case "Auditorias":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Auditorías";
-        break;
-      case "GestionIncidencias":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Incidencias";
-        break;
-      case "ControlDocumental":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Control Documental";
-        break;
-      case "Quimicos":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Productos Químicos";
-        break;
-      case "GestionInformes":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Informes";
-        break;
-      case "GeneralEquipos":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Equipos";
-        break;
-      case "RecursosHumanos":
-        imageSource = require("../../assets/images/modulos.webp");
-        moduloTexto = "Personal";
-        break;
-      // Agrega más casos según sea necesario
-      default:
-        imageSource = require("../../assets/images/logo.png"); // Imagen por defecto
-        moduloTexto = "Módulo Desconocido";
-    }
-  
+  const backgroundColor = colorPalette[index % colorPalette.length]; // Cicla los colores si hay más cajas que colores
 
-    return (
-      <TouchableOpacity
-        style={styles.moduloContainer}
-        onPress={() => navigation.navigate(item.pantalla)}
-      >
-        <Image
-  source={require('../../assets/images/modulos.webp')}
-  style={[styles.moduloImagen, { opacity: 0.4 }]} // 0.1 es muy transparente, ajusta según lo necesites
-/>
-        {/* <Image source={imageSource} style={styles.moduloImagen} /> */}
-        <View style={styles.overlay}>
-          <Text style={styles.moduloTexto}>{moduloTexto}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+  return (
+    <TouchableOpacity
+      style={[styles.moduloContainer, { backgroundColor }]}
+      onPress={() => navigation.navigate(item.pantalla)}
+    >
+      <View style={styles.overlay}>
+        <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
-  if (loading) {
-    return (
-      <SafeAreaView style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={COLORS.text} />
-      </SafeAreaView>
-    );
-  }
 
   return (
     <SafeAreaView style={styles.area}>
@@ -219,22 +180,23 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   headerTitle: {
-    fontSize: SIZES.h2,
+    fontSize: SIZES.h3,
     fontWeight: "bold",
     marginLeft: 16,
   },
   backIcon: {
     height: 24,
     width: 24,
-  }, 
+  },
   moduloContainer: {
-    flex: 1,
-    margin: 3,
+    width: "45%",
+    height: 150,
+    margin: 10,
     borderRadius: 15,
     overflow: "hidden",
-    minWidth: "45%",
-    minHeight: 120,
-    position: "relative",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.grayscale100,
   },
   moduloImagen: {
     width: "100%",
@@ -249,16 +211,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.1)", 
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
   },
-  moduloTexto: {
-    fontSize: SIZES.h3,
-    color: COLORS.greyscale900,
-    fontWeight: 'bold',
-    textAlign: "center",
-    textTransform: "uppercase",
-  },
-  
   header: {
     padding: 16,
   },
@@ -302,6 +256,38 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     resizeMode: "contain",
   },
+  moduloContainer: {
+    width: "45%",
+    height: 150,
+    margin: 5,
+    borderRadius: 15,
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: COLORS.grayscale100, // Este color será sobrescrito por el color dinámico
+  },
+  moduloImagen: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  overlay: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.1)",
+  },
+  moduloTexto: {
+    fontSize: SIZES.h5,
+    color: COLORS.greyscale900,
+    fontWeight: "semibold",
+    textAlign: "center",
+    textTransform: "uppercase",
+  },
 });
 
-export default Inicio;
+export default RequisitosDashboard;

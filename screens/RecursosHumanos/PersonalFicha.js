@@ -16,6 +16,7 @@ import { COLORS, icons, SIZES } from '../../constants';
 const PersonalFicha = ({ route, navigation }) => {
     const { id } = route.params
     const { nombre } = route.params
+    console.log(nombre)
 
     const [userId, setUserId] = useState(null);
     const [centroId, setCentroId] = useState(null);
@@ -229,11 +230,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 4,
     },
     codigoCell: {
-        flex: 3, // 20%
-    },
-    tituloCell: {
-        flex: 7, // 70%
-    },
+        flex: 2, // 20%
+        fontSize: 12,
+      },
+      tituloCell: {
+        flex: 8, // 70%
+        fontSize: 12,
+      },
     horizontalLine: {
         borderBottomColor: COLORS.black,
         borderBottomWidth: 1,

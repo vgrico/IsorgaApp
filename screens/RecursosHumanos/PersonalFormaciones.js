@@ -15,8 +15,8 @@ import { COLORS, icons, SIZES } from '../../constants';
 
 
 const PersonalFormaciones = ({ route, navigation }) => {
-    const { id } = route.params
-    const { nombre } = route.params
+    // const { id } = route.params
+    // const { nombre } = route.params
 
     const [userId, setUserId] = useState(null);
     const [centroId, setCentroId] = useState(null);

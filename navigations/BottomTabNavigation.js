@@ -13,7 +13,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS, FONTS, icons } from "../constants";
 
 import Perfil from "../screens/General/Perfil";
-import Auditorias from "../screens/Auditorias/Auditorias";
 import Box from "../screens/Box/Box";
 import Inicio from "../screens/General/Inicio";
 import Todo from "../screens/General/Todo";
@@ -28,8 +27,7 @@ const BottomTabNavigation = () => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    // Logic to reload the screen
-    console.log("Screen reloaded");
+    console.log("Pantalla recargada");
   }, [isFocused]);
 
   return (
@@ -47,7 +45,7 @@ const BottomTabNavigation = () => {
           tabBarIcon: ({ focused }) => (
             <TabIcon
               focused={focused}
-              icon={focused ? icons.home : icons.home2Outline}
+              icon={focused ? icons.bookmark : icons.bookmark2Outline}
               label="Módulos"
             />
           ),
@@ -61,14 +59,14 @@ const BottomTabNavigation = () => {
           tabBarIcon: ({ focused }) => (
             <TabIcon
               focused={focused}
-              icon={focused ? icons.paperOutline : icons.paper}
+              icon={focused ? icons.document : icons.documentOutline}
               label="Box"
             />
           ),
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="tareas"
         component={Todo}
         options={{
@@ -80,69 +78,8 @@ const BottomTabNavigation = () => {
             />
           ),
         }}
-      />
+      /> */}
 
-      {/* <Tab.Screen
-                name="Auditorias"
-                component={Auditorias}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            icon={focused ? icons.paperOutline : icons.paper}
-                            label="Auditorias"
-                        />
-                    ),
-                }}
-            /> */}
-
-      {/* <Tab.Screen
-                name="Cartas"
-                component={Cartas}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            iconComponent={
-                                <Ionicons
-                                    name={focused ? "albums" : "albums-outline"}
-                                    size={24}
-                                    color={focused ? COLORS.primary : COLORS.gray3}
-                                />
-                            }
-                            label="Cartas"
-                        />
-                    ),
-                }}
-            />
-
-            <Tab.Screen
-                name="MisSeries"
-                component={MisSeries}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            icon={focused ? icons.videoCamera : icons.videoCameraOutline}
-                            label="Series"
-                        />
-                    ),
-                }}
-            />*/}
-
-      {/* <Tab.Screen
-                name="Publicaciones"
-                component={Informes}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        <TabIcon
-                            focused={focused}
-                            icon={focused ? icons.paperOutline : icons.paper}
-                            label="Checklist"
-                        />
-                    ),
-                }}
-            />  */}
 
       <Tab.Screen
         name="MiPerfil"
@@ -171,7 +108,7 @@ const TabIcon = ({ focused, icon, label, iconComponent }) => (
         resizeMode="contain"
         style={[
           isLargeScreen ? styles.iconLarge : styles.icon,
-          { tintColor: focused ? COLORS.primary : COLORS.gray3 },
+          { tintColor: focused ? COLORS.tertiary : COLORS.gray3 },
         ]}
       />
     )}
@@ -180,7 +117,7 @@ const TabIcon = ({ focused, icon, label, iconComponent }) => (
         style={[
           styles.label,
           {
-            color: focused ? COLORS.primary : COLORS.gray3,
+            color: focused ? COLORS.tertiary : COLORS.gray3,
           },
         ]}
         numberOfLines={1}
@@ -200,7 +137,7 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     elevation: 0,
-    height: Platform.OS === "ios" ? 90 : 60,
+    height: Platform.OS === "ios" ? 80 : 60,
     backgroundColor: "#f0f0f0", // Fondo gris
     borderTopWidth: 1, // Ancho de la línea
     borderTopColor: "#dcdcdc", // Color de la línea

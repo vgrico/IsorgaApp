@@ -11,9 +11,8 @@ import {
 import { COLORS, icons, SIZES } from '../../constants'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const PersonalGeneral = ({ route, navigation }) => {
+const PersonalGeneral = ({  navigation }) => {
 
-    const { id } = route.params
     const { nombre } = route.params
 
     const [userId, setUserId] = useState(null)
@@ -50,25 +49,23 @@ const PersonalGeneral = ({ route, navigation }) => {
     }, [userId, centroId])
 
 
-    const tiposDocumentos = [
+    const apartados = [
+        {
+            moduloTexto: 'SECCIONES',
+            url: 'PersonalSecciones',
+        },
         {
             moduloTexto: 'PUESTOS',
-            color: COLORS.grayscale100,
-            url: 'PersonalFicha',
-            tipo: '1',
-            id: id,
-            nombre:nombre
-
+            url: 'PersonalPuestos',
+        },
+        {
+            moduloTexto: 'PERSONAL',
+            url: 'PersonalLista',
         },
         {
             moduloTexto: 'FORMACIONES',
-            color: COLORS.grayscale100,
             url: 'PersonalFormaciones',
-            tipo: '2',
-            id: id,
-            nombre:nombre
         },
-
     ]
 
 
@@ -105,11 +102,11 @@ const PersonalGeneral = ({ route, navigation }) => {
             {renderHeader()}
             <View style={styles.horizontalLine} /> 
             <View style={styles.header}>
-                <Text style={styles.tituloSegundo}>FICHA PERSONAL</Text>
+                <Text style={styles.tituloSegundo}>RECURSOS HUMANOS</Text>
             </View>
             <View style={styles.horizontalLine} /> 
             <FlatList
-                data={tiposDocumentos}
+                data={apartados}
                 renderItem={renderModulo}
                 keyExtractor={(item, index) => index.toString()}
                 numColumns={2}
