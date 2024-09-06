@@ -77,8 +77,8 @@ const RequisitosDashboard = ({ route, navigation }) => {
     '#6B5B95', // Plum
     '#955251', // Mauve
     '#B565A7', // Violet
-    '#DD4124', // Red
     '#D65076', // Pink
+    '#DD4124', // Red
   ];
 
   const fetchModulosUsuario = async () => {
