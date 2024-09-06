@@ -70,8 +70,8 @@ const RequisitosDashboard = ({ route, navigation }) => {
 
   const colorPalette = [
     '#88B04B', // Green
-    '#92A8D1', // Blue
     '#F7CAC9', // Rose
+    '#92A8D1', // Blue
     '#009B77', // Teal
     '#FF6F61', // Coral
     '#6B5B95', // Plum
