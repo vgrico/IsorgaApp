@@ -212,7 +212,7 @@ const Perfil = ({ navigation }) => {
 
       <TouchableOpacity onPress={handleLogout} style={styles.logoutContainer}>
         <Image source={icons.logout} style={styles.logoutIcon} />
-        <Text style={styles.logoutName}>Salir y desconectar</Text>
+        <Text style={styles.logoutName}>Salir</Text>
       </TouchableOpacity>
     </View>
     );
