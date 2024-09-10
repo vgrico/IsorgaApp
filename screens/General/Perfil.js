@@ -1,60 +1,48 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
-  Switch,
-  fontFamily,
+  ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ScrollView } from "react-native-virtualized-view";
-
 import { COLORS, SIZES, icons } from "../../constants";
 import { useFocusEffect } from "@react-navigation/native";
 
 const Perfil = ({ navigation }) => {
-
   const [userId, setUserId] = useState(null);
   const [centroId, setCentroId] = useState(null);
   const [today, setToday] = useState("");
   const [datosUsuario, setDatosUsuario] = useState([]);
   const [datosCentro, setDatosCentro] = useState([]);
 
-  useEffect(() => {
-    const loadUserAndCentroId = async () => {
-      try {
-        const [userIdFromStorage, centroIdFromStorage] = await Promise.all([
-          AsyncStorage.getItem("isorgaId"),
-          AsyncStorage.getItem("centroId"),
-        ]);
-  
-        setUserId(userIdFromStorage);
-        setCentroId(centroIdFromStorage);
-  
-        if (userIdFromStorage && centroIdFromStorage) {
-          await fetchDatosUsuario(userIdFromStorage);
-          await fetchDatosCentro(centroIdFromStorage);
-        }
-      } catch (error) {
-        console.error("Error loading data from AsyncStorage:", error);
-      }
-    };
-  
-    loadUserAndCentroId();
-  }, []);
-
   useFocusEffect(
-    React.useCallback(()=>{
-      if (userId && centroId) {
-        fetchDatosUsuario(userId);
-        fetchDatosCentro(centroId);
-      }
+    React.useCallback(() => {
+      const loadUserAndCentroId = async () => {
+        try {
+          const [userIdFromStorage, centroIdFromStorage] = await Promise.all([
+            AsyncStorage.getItem("isorgaId"),
+            AsyncStorage.getItem("centroId"),
+          ]);
 
-    },[userId, centroId])
-  )
+          setUserId(userIdFromStorage);
+          setCentroId(centroIdFromStorage);
+
+          if (userIdFromStorage && centroIdFromStorage) {
+            await fetchDatosUsuario(userIdFromStorage);
+            await fetchDatosCentro(centroIdFromStorage);
+          }
+        } catch (error) {
+          console.error("Error loading data from AsyncStorage:", error);
+        }
+      };
+
+      loadUserAndCentroId();
+    }, [])
+  );
 
   useEffect(() => {
     const currentDate = new Date();
@@ -77,7 +65,7 @@ const Perfil = ({ navigation }) => {
     }
   };
 
-  const fetchDatosUsuario = async () => {
+  const fetchDatosUsuario = async (id) => {
     try {
       const response = await fetch("https://isorga.com/api/DatosUsuario.php", {
         method: "POST",
@@ -85,18 +73,17 @@ const Perfil = ({ navigation }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userId: userId,
+          userId: id,
         }),
       });
       const data = await response.json();
-      console.log(data);
       setDatosUsuario(data);
     } catch (error) {
-      console.error("Error fetching modulos:", error);
+      console.error("Error fetching datosUsuario:", error);
     }
   };
 
-  const fetchDatosCentro = async () => {
+  const fetchDatosCentro = async (id) => {
     try {
       const response = await fetch("https://isorga.com/api/DatosCentro.php", {
         method: "POST",
@@ -104,41 +91,24 @@ const Perfil = ({ navigation }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          centroId: centroId,
+          centroId: id,
         }),
       });
       const data = await response.json();
-      console.log(data);
       setDatosCentro(data);
     } catch (error) {
-      console.error("Error fetching modulos:", error);
+      console.error("Error fetching datosCentro:", error);
     }
   };
-
-  // const renderFoto = () => {
-  //   return (
-  //     <View style={styles.container}>
-  //       <Image
-  //         source={{
-  //           uri: `https://isorga.com/assets/images/foto/${datosUsuario.imagen}`,
-  //         }}
-  //         style={styles.logo}
-  //       />
-  //     </View>
-  //   );
-  // };
 
   const renderFoto = () => {
     const imagenUsuario = datosUsuario?.imagen
       ? { uri: `https://isorga.com/app/images/foto/${datosUsuario.imagen}` }
-      : require('../../assets/images/user_2.png'); 
-  
+      : require('../../assets/images/user_2.png');
+
     return (
       <View style={styles.container}>
-        <Image
-          source={imagenUsuario}
-          style={styles.logo}
-        />
+        <Image source={imagenUsuario} style={styles.logo} />
       </View>
     );
   };
@@ -155,7 +125,6 @@ const Perfil = ({ navigation }) => {
   const renderUsuario = () => (
     <View style={styles.usuarioContainer}>
       <View style={styles.usuarioInfo}>
-
         <View style={styles.usuarioDatoContainer}>
           <Text style={styles.usuarioSubTitulo}>CORREO: </Text>
           <Text style={styles.usuarioDato}>{datosUsuario.mail}</Text>
@@ -200,21 +169,20 @@ const Perfil = ({ navigation }) => {
 
   const renderSettings = () => {
     return (
+      <View style={styles.settingsContainer}>
+        <TouchableOpacity
+          style={styles.settingsItemContainer}
+          onPress={() => navigation.navigate("CambiarCentros", { pantalla: 1 })}
+        >
+          <Image source={icons.home} style={styles.settingsIcon} />
+          <Text style={styles.settingsName}>Cambiar Centro</Text>
+        </TouchableOpacity>
 
-    <View style={styles.settingsContainer}>
-      <TouchableOpacity
-        style={styles.settingsItemContainer}
-        onPress={() => navigation.navigate("Centros", { pantalla: 1 })}
-      >
-        <Image source={icons.home} style={styles.settingsIcon} />
-        <Text style={styles.settingsName}>Cambiar Centro</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={handleLogout} style={styles.logoutContainer}>
-        <Image source={icons.logout} style={styles.logoutIcon} />
-        <Text style={styles.logoutName}>Salir y Desconectar</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={handleLogout} style={styles.logoutContainer}>
+          <Image source={icons.logout} style={styles.logoutIcon} />
+          <Text style={styles.logoutName}>Salir y Desconectar</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -224,11 +192,9 @@ const Perfil = ({ navigation }) => {
       <View style={styles.horizontalLine} />
       {renderUsuario()}
       <View style={styles.horizontalLineaGruesa} />
-      <View style={styles.container}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          {renderSettings()}
-        </ScrollView>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {renderSettings()}
+      </ScrollView>
     </SafeAreaView>
   );
 };
