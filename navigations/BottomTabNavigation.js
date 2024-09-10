@@ -17,6 +17,10 @@ import Box from "../screens/Box/Box";
 import Inicio from "../screens/General/Inicio";
 import Todo from "../screens/General/Todo";
 import Informes from "../screens/Informes/Informes";
+import Formulario from "../screens/General/Informes";
+import FormularioResiduos from "../screens/General/FormularioResiduos";
+import InformeAH from "../screens/General/InformeAH";
+import Informe5s from "../screens/General/Informes5s";
 
 const Tab = createBottomTabNavigator();
 
@@ -65,6 +69,59 @@ const BottomTabNavigation = () => {
           ),
         }}
       />
+      <Tab.Screen
+        name="Formulario"
+        component={Formulario}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              icon={focused ? icons.document : icons.documentOutline}
+              label="Formulario"
+            />
+          ),
+        }}
+      />
+            <Tab.Screen
+        name="Residuos"
+        component={FormularioResiduos}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              icon={focused ? icons.document : icons.documentOutline}
+              label="Residuos"
+            />
+          ),
+        }}
+      />
+
+<Tab.Screen
+        name="InformeAH"
+        component={InformeAH}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              icon={focused ? icons.document : icons.documentOutline}
+              label="InformeAH"
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Informe5s"
+        component={Informe5s}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              focused={focused}
+              icon={focused ? icons.document : icons.documentOutline}
+              label="Informe5s"
+            />
+          ),
+        }}
+      />
 
       {/* <Tab.Screen
         name="tareas"
@@ -79,7 +136,6 @@ const BottomTabNavigation = () => {
           ),
         }}
       /> */}
-
 
       <Tab.Screen
         name="MiPerfil"

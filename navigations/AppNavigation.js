@@ -76,6 +76,10 @@ import ListaRequisitos from "../screens/Requisitos/ListaRequisitos";
 import FichaRequisito from "../screens/Requisitos/FichaRequisito";
 import PendientesLeer from "../screens/Requisitos/PendientesLeer";
 import CalendarioEquipos from "../screens/Equipos/CalendarioEquipos";
+import CambiarCentros from "../screens/General/CambiarCentros";
+import Auditorias from "../screens/Auditorias/Auditorias";
+import Auditoria from "../screens/Auditorias/Auditoria";
+import NuevaRuta from "../screens/Auditorias/NuevaRuta";
 
 
 
@@ -119,6 +123,7 @@ const AppNavigation = () => {
 
         <Stack.Screen name="Perfil" component={Perfil} />
         <Stack.Screen name="Centros" component={Centros} />
+        <Stack.Screen name="CambiarCentros" component={CambiarCentros} />
 
 
         <Stack.Screen name="ListadoBox" component={ListadoBox} />
@@ -188,6 +193,12 @@ const AppNavigation = () => {
         <Stack.Screen name="ListaRequisitos" component={ListaRequisitos} />
         <Stack.Screen name="FichaRequisito" component={FichaRequisito} />
         <Stack.Screen name="PendientesLeer" component={PendientesLeer} />
+
+
+        <Stack.Screen name="Auditorias" component={Auditorias} />
+        <Stack.Screen name="Auditoria" component={Auditoria} />
+        <Stack.Screen name="NuevaRuta" component={NuevaRuta} />
+
 
 
 

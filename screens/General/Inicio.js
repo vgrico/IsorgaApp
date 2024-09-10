@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS, SIZES } from "../../constants";
 
-const RequisitosDashboard = ({ route, navigation }) => {
+const Inicio = ({ route, navigation }) => {
   const [userId, setUserId] = useState(null);
   const [centroId, setCentroId] = useState(null);
   const [modulosUsuario, setModulosUsuario] = useState([]);
@@ -290,4 +290,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RequisitosDashboard;
+export default Inicio;
