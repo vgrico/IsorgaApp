@@ -42,7 +42,7 @@ const Auditorias = ({ navigation }) => {
   const listaAuditorias = async () => {
     try {
       const response = await fetch(
-        `https://momdel.es/dev/api/app/listaAuditorias.php?id=${centroId}`
+        `https://isorga.com/api/app/listaAuditorias.php?id=${centroId}`
       );
       const data = await response.json();
       setDatosSeries(data);
@@ -108,24 +108,18 @@ const Auditorias = ({ navigation }) => {
 
   const handleGeneratePDF = async (id) => {
     try {
-      // const response = await fetch(
-      //   `https://isorga.com/api/auditoria_pdf.php?id=${id}`
-      // );
-      // const data = await response.json();
-  
       const pdfUrl = `https://isorga.com/auditorias/auditoria_pdf.php?id=${id}`;
       Linking.openURL(pdfUrl);  
     } catch (error) {
       console.error("Error fetching series data:", error);
-    }
-  
+    } 
     // Lógica para generar el PDF
     console.log(`Generar PDF para la auditoría ${id}`);
   };
 
   const renderItem = ({ item }) => (
     <View style={[styles.card, getCardStyle(item.estado)]}>
-      <Text style={styles.detailsTitle}>{item.centroNombre}</Text>
+      <Text style={styles.detailsTitle}>{item.centroAuditado}</Text>
       <View style={styles.horizontalLine} />
 
       <Text style={styles.title}>{item.titulo}</Text>
@@ -254,6 +248,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     padding: 10,
     borderRadius: 8,
+    flex: 1, // Esto puede hacer que los botones ocupen el mismo ancho
+    marginHorizontal: 5, // Espacio lateral entre los botones
   },
   buttonText: {
     color: COLORS.white,

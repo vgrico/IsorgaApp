@@ -19,8 +19,8 @@ import Todo from "../screens/General/Todo";
 import Informes from "../screens/Informes/GestionInformes";
 import Formulario from "../screens/General/Informes";
 import FormularioResiduos from "../screens/General/FormularioResiduos";
-import InformeAH from "../screens/General/InformeAH";
-import Informe5s from "../screens/General/Informes5s";
+import InformeAH from "../screens/General/X_InformeAH";
+import Informe5s from "../screens/General/X_Informes5s";
 
 const Tab = createBottomTabNavigator();
 

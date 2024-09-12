@@ -16,6 +16,7 @@ import { COLORS, icons, SIZES } from "../../constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import RenderHtml from "react-native-render-html";
 import { useWindowDimensions } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Auditoria = ({ route, navigation }) => {
   const { id } = route.params; // ID de la auditoría recibido
@@ -27,18 +28,20 @@ const Auditoria = ({ route, navigation }) => {
   const [listaRutas, setListaRutas] = useState([]); // Estado para almacenar las rutas obtenidas
   const [apartadoSeleccionado, setApartadoSeleccionado] = useState(null); // Estado para almacenar el ID del apartado seleccionado
 
-  useEffect(() => {
-    const loadUserId = async () => {
-      try {
-        const userIdFromStorage = await AsyncStorage.getItem("isorgaId");
-        setUserId(userIdFromStorage);
-        fetchAuditoriaData(userIdFromStorage);
-      } catch (error) {
-        console.error("Error al cargar el userId desde AsyncStorage:", error);
-      }
-    };
-    loadUserId();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const loadUserId = async () => {
+        try {
+          const userIdFromStorage = await AsyncStorage.getItem("isorgaId");
+          setUserId(userIdFromStorage);
+          fetchAuditoriaData(userIdFromStorage);
+        } catch (error) {
+          console.error("Error al cargar el userId desde AsyncStorage:", error);
+        }
+      };
+      loadUserId();
+    }, [])
+  );
 
   const renderHeader = () => {
     return (
@@ -224,8 +227,11 @@ const Auditoria = ({ route, navigation }) => {
                       style={styles.routeItem}
                       onPress={() => handleRouteClick(item.id)}
                     >
+                      <Text style={styles.routeFecha}>
+                        {item.fecha}:
+                      </Text>
                       <Text style={styles.routeText}>
-                        {item.fecha}: {item.texto}
+                        {item.texto}
                       </Text>
                     </TouchableOpacity>
                   ))}
@@ -287,7 +293,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   buttonVer: {
-    backgroundColor: "#FF6F61",
+    backgroundColor: COLORS.gray,
     padding: 10,
     borderRadius: 4,
     alignItems: "center",
@@ -326,6 +332,11 @@ const styles = StyleSheet.create({
   },
   routeText: {
     fontSize: 16,
+    color: "#333",
+  },
+  routeFecha: {
+    fontSize: 14,
+    fontWeight: "semibold",
     color: "#333",
   },
   noRoutesText: {

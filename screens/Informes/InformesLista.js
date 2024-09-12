@@ -96,8 +96,27 @@ const InformeLista = ({ route, navigation }) => {
             style={styles.backIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>LISTA PERSONAL</Text>
+        <Text style={styles.headerTitle}>LISTA INFORMES</Text>
         <View style={{ flex: 1 }} />
+  
+        {/* Botón de Nuevo Informe con lógica condicional basada en el ID */}
+        <TouchableOpacity
+          style={styles.newReportButton}
+          onPress={() => {
+            if (informe === 1) {
+              navigation.navigate("InformeStandard", { informeId: informe });
+            } else if (informe === 3) {
+              navigation.navigate("InformeAH", { informeId: informe });
+            } else if (informe === 5) {
+              navigation.navigate("Informe5s", { informeId: informe });
+            } else{
+              navigation.navigate("InformeStandard", { informeId: informe });
+            }
+          }}
+        >
+          <Text style={styles.newReportButtonText}>Nuevo Informe</Text>
+        </TouchableOpacity>
+  
         <TouchableOpacity onPress={() => navigation.navigate("Inicio")}>
           <Image
             source={require("../../assets/images/logoIsorga.png")}
@@ -112,12 +131,15 @@ const InformeLista = ({ route, navigation }) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("PersonalFicha", { id: item.id, nombre: item.nombre })
+          navigation.navigate("informe", { id: item.id })
         }
       >
         <View style={styles.row}>
-          <Text style={[styles.cell, styles.codigoCell]}>{item.codigo}</Text>
-          <Text style={[styles.cell, styles.tituloCell]}>{item.nombre}</Text>
+          <Text style={[styles.cell, styles.codigoCell]}>{item.fecha}</Text>
+          <Text style={[styles.cell, styles.codigoCell]}>{item.hora}</Text>
+          <Text style={[styles.cell, styles.tituloCell]}>{item.titulo}</Text>
+          <Text style={[styles.cell, styles.tituloCell]}>{item.centroNombre}</Text>
+          <Text style={[styles.cell, styles.tituloCell]}>{item.usuarioNombre}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -135,20 +157,29 @@ const InformeLista = ({ route, navigation }) => {
     <SafeAreaView style={styles.area}>
       {renderHeader()}
       <View style={styles.horizontalLine} />
-      <TextInput
+      {/* <TextInput
         placeholder="Buscar..."
         style={styles.searchBar}
         placeholderTextColor={COLORS.gray}
         value={search}
         onChangeText={handleSearch}
-      />
+      /> */}
       <View style={styles.table}>
         <View style={styles.headerRow}>
           <Text style={[styles.headerCell, styles.codigoCell]}>
-            Código
+            Fecha
+          </Text>
+          <Text style={[styles.headerCell, styles.codigoCell]}>
+            Hora
           </Text>
           <Text style={[styles.headerCell, styles.tituloCell]}>
-            Nombre
+            Tipo Informe
+          </Text>
+          <Text style={[styles.headerCell, styles.tituloCell]}>
+            Centro
+          </Text>
+          <Text style={[styles.headerCell, styles.tituloCell]}>
+            Usuario
           </Text>
         </View>
         <FlatList
@@ -262,7 +293,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   tituloCell: {
-    flex: 8, // 70%
+    flex: 6, // 70%
     fontSize: 12,
   },
   horizontalLine: {
@@ -275,6 +306,19 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: "contain",
   },
+  newReportButton: {
+    backgroundColor: COLORS.primary, // Color de fondo del botón
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 5,
+    marginRight: 10, // Espaciado a la derecha del botón
+  },
+  newReportButtonText: {
+    color: COLORS.white, // Color del texto
+    fontWeight: "bold",
+    fontSize: 14,
+  },
+
 });
 
 export default InformeLista;
