@@ -155,7 +155,7 @@ const Inicio = ({ route, navigation }) => {
         renderItem={renderModulo}
         keyExtractor={(item) => item.moduloId.toString()}
         numColumns={2}
-        contentContainerStyle={styles.flatListContent}
+        contentContainerStyle={[styles.flatListContent, { paddingBottom: 75 }]}  // Añadir paddingBottom para el último elemento
         columnWrapperStyle={styles.columnWrapper}
       />
     </SafeAreaView>

@@ -83,16 +83,16 @@ const Box = ({ navigation }) => {
   };
 
   const colorPalette = [
-    '#FF6F61', // Coral
-    '#92A8D1', // Blue
-    '#88B04B', // Green
-    '#F7CAC9', // Rose
-    '#955251', // Mauve
-    '#B565A7', // Violet
-    '#6B5B95', // Plum
-    '#009B77', // Teal
-    '#DD4124', // Red
-    '#D65076', // Pink
+    "#FF6F61", // Coral
+    "#92A8D1", // Blue
+    "#88B04B", // Green
+    "#F7CAC9", // Rose
+    "#955251", // Mauve
+    "#B565A7", // Violet
+    "#6B5B95", // Plum
+    "#009B77", // Teal
+    "#DD4124", // Red
+    "#D65076", // Pink
   ];
 
   const renderModulo = ({ item, index }) => {
@@ -102,10 +102,9 @@ const Box = ({ navigation }) => {
 
     return (
       <TouchableOpacity
-      style={[styles.moduloContainer, { backgroundColor }]}
+        style={[styles.moduloContainer, { backgroundColor }]}
         onPress={() => navigation.navigate("ListadoBox", { id: item.id })}
       >
-      
         <View style={styles.overlay}>
           <Text style={styles.moduloTexto}>{item.titulo}</Text>
         </View>
@@ -122,7 +121,7 @@ const Box = ({ navigation }) => {
         renderItem={renderModulo}
         keyExtractor={(item, index) => index.toString()}
         numColumns={2}
-        contentContainerStyle={styles.flatListContent}
+        contentContainerStyle={[styles.flatListContent, { paddingBottom: 75 }]} // Añadir paddingBottom para el último elemento
         columnWrapperStyle={styles.columnWrapper}
       />
     </SafeAreaView>

@@ -12,6 +12,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, SIZES, icons } from '../../constants';
@@ -227,50 +229,52 @@ const NuevaRuta = ({ route, navigation }) => {
 
         {/* Contenido de la primera pestaña: Datos Ruta */}
         {activeTab === 'datosRuta' && (
-          <ScrollView contentContainerStyle={styles.content}>
-            {/* Mostrar título y observaciones de la auditoría */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>PREGUNTA</Text>
-              <Text style={styles.text}>{tituloAuditoria}</Text>
-              <RenderHtml contentWidth={width} source={{ html: observacionesAuditoria }} />
-            </View>
-            <View style={styles.horizontalLineInterno} />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+          >
+            <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>PREGUNTA</Text>
+                <Text style={styles.text}>{tituloAuditoria}</Text>
+                <RenderHtml contentWidth={width} source={{ html: observacionesAuditoria }} />
+              </View>
+              <View style={styles.horizontalLineInterno} />
 
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>PERSONAL AUDITADO</Text>
-              <TextInput
-                style={styles.input}
-                value={personalAuditado}
-                onChangeText={setPersonalAuditado}
-                placeholder="Escriba el personal auditado"
-                placeholderTextColor={COLORS.gray}
-              />
-            </View>
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>PERSONAL AUDITADO</Text>
+                <TextInput
+                  style={styles.input}
+                  value={personalAuditado}
+                  onChangeText={setPersonalAuditado}
+                  placeholder="Escriba el personal auditado"
+                  placeholderTextColor={COLORS.gray}
+                />
+              </View>
 
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>EVIDENCIAS RUTA</Text>
-              <TextInput
-                style={[styles.input, styles.textArea]}
-                value={fuentesEvidencias}
-                onChangeText={setFuentesEvidencias}
-                placeholder="Escriba la ruta de auditoría y fuentes de evidencias"
-                placeholderTextColor={COLORS.gray}
-                multiline
-                numberOfLines={4}
-              />
-            </View>
+              <View style={styles.formGroup}>
+                <Text style={styles.label}>EVIDENCIAS RUTA</Text>
+                <TextInput
+                  style={[styles.input, styles.textArea]}
+                  value={fuentesEvidencias}
+                  onChangeText={setFuentesEvidencias}
+                  placeholder="Escriba la ruta de auditoría y fuentes de evidencias"
+                  placeholderTextColor={COLORS.gray}
+                  multiline
+                  numberOfLines={4}
+                />
+              </View>
 
-            <TouchableOpacity style={styles.saveButton} onPress={guardarRuta}>
-              <Text style={styles.saveButtonText}>GUARDAR RUTA</Text>
-            </TouchableOpacity>
-          </ScrollView>
+              <TouchableOpacity style={styles.saveButton} onPress={guardarRuta}>
+                <Text style={styles.saveButtonText}>GUARDAR RUTA</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </KeyboardAvoidingView>
         )}
 
         {/* Contenido de la segunda pestaña: No Conformidad/Oportunidad */}
         {activeTab === 'noConformidad' && (
           <View style={styles.content}>
-
-
             {noConformidades.length > 0 ? (
               <FlatList
                 data={noConformidades}
@@ -284,9 +288,10 @@ const NuevaRuta = ({ route, navigation }) => {
             ) : (
               <Text style={styles.placeholderText}>No hay no conformidades registradas.</Text>
             )}
-      <View style={styles.horizontalLine} />
 
-<TouchableOpacity
+            <View style={styles.horizontalLine} />
+
+            <TouchableOpacity
               style={styles.addButton}
               onPress={() => setModalVisible(true)}
             >
@@ -302,14 +307,15 @@ const NuevaRuta = ({ route, navigation }) => {
               <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                 <View style={styles.modalContainer}>
                   <TouchableWithoutFeedback>
-                    <View style={styles.modalContent}>
+                    <KeyboardAvoidingView
+                      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                      style={styles.modalContent}
+                    >
                       <Text style={styles.modalTitle}>AÑADIR OBSERVACIÓN</Text>
 
                       <View style={styles.horizontalLine} />
                       <Text style={styles.modalText}>1.- Elegir Tipo Observación</Text>
 
-
-                      {/* Selección del tipo de no conformidad */}
                       <FlatList
                         data={tiposNoConformidad}
                         keyExtractor={(item) => item.id.toString()}
@@ -332,8 +338,9 @@ const NuevaRuta = ({ route, navigation }) => {
                           </TouchableOpacity>
                         )}
                       />
-      <View style={styles.horizontalLine} />
-      <Text style={styles.modalText}>2.- Descripción de la Observación</Text>
+
+                      <View style={styles.horizontalLine} />
+                      <Text style={styles.modalText}>2.- Descripción de la Observación</Text>
 
                       <TextInput
                         style={styles.input}
@@ -341,6 +348,7 @@ const NuevaRuta = ({ route, navigation }) => {
                         onChangeText={setDescripcionNoConformidad}
                         placeholder="Escriba la descripción"
                         placeholderTextColor={COLORS.gray}
+                        multiline
                       />
 
                       <TouchableOpacity style={styles.saveButton} onPress={guardarNoConformidad}>
@@ -353,7 +361,7 @@ const NuevaRuta = ({ route, navigation }) => {
                       >
                         <Text style={styles.cancelButtonText}>Cancelar</Text>
                       </TouchableOpacity>
-                    </View>
+                    </KeyboardAvoidingView>
                   </TouchableWithoutFeedback>
                 </View>
               </TouchableWithoutFeedback>
@@ -398,7 +406,7 @@ const styles = StyleSheet.create({
   },
   formGroup: {
     marginBottom: 5,
-    marginTop:10,
+    marginTop: 10,
   },
   label: {
     fontSize: 16,
@@ -495,7 +503,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    alignItems: 'center',
   },
   cancelButtonText: {
     color: COLORS.white,

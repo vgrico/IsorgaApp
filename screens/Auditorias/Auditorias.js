@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Button,
   Image,
+  Linking
 } from "react-native";
 import { COLORS, SIZES, icons } from "../../constants";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,11 +35,11 @@ const Auditorias = ({ navigation }) => {
 
   useEffect(() => {
     if (centroId) {
-      fetchSeriesMejorValoradas();
+      listaAuditorias();
     }
   }, [centroId]);
 
-  const fetchSeriesMejorValoradas = async () => {
+  const listaAuditorias = async () => {
     try {
       const response = await fetch(
         `https://momdel.es/dev/api/app/listaAuditorias.php?id=${centroId}`
@@ -47,6 +48,30 @@ const Auditorias = ({ navigation }) => {
       setDatosSeries(data);
     } catch (error) {
       console.error("Error fetching series data:", error);
+    }
+  };
+
+  const abrirCerrarAuditoria = async (idInforme) => {
+    try {
+      const response = await fetch(
+        "https://isorga.com/api/abrirCerrarAuditoria.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            usuario: userId,
+            id: idInforme,
+          }),
+        }
+      );
+
+      const result = await response.json();
+      listaAuditorias(); // Se puede invocar una sola vez
+    } catch (error) {
+      console.error("Error al abrir/cerrar la auditoría:", error);
+      listaAuditorias(); // Puedes mostrar el error pero aún intentar actualizar la lista
     }
   };
 
@@ -81,7 +106,19 @@ const Auditorias = ({ navigation }) => {
     );
   };
 
-  const handleGeneratePDF = (id) => {
+  const handleGeneratePDF = async (id) => {
+    try {
+      // const response = await fetch(
+      //   `https://isorga.com/api/auditoria_pdf.php?id=${id}`
+      // );
+      // const data = await response.json();
+  
+      const pdfUrl = `https://isorga.com/auditorias/auditoria_pdf.php?id=${id}`;
+      Linking.openURL(pdfUrl);  
+    } catch (error) {
+      console.error("Error fetching series data:", error);
+    }
+  
     // Lógica para generar el PDF
     console.log(`Generar PDF para la auditoría ${id}`);
   };
@@ -102,15 +139,15 @@ const Auditorias = ({ navigation }) => {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate("Auditoria", { id: item.id })}
-          >
-            <Text style={styles.buttonText}>Abrir Auditoría</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
             onPress={() => handleGeneratePDF(item.id)}
           >
             <Text style={styles.buttonText}>Generar PDF</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => abrirCerrarAuditoria(item.id)}
+          >
+            <Text style={styles.buttonText}>Abrir Auditoría</Text>
           </TouchableOpacity>
         </View>
       ) : (
@@ -119,11 +156,11 @@ const Auditorias = ({ navigation }) => {
             style={styles.button}
             onPress={() => navigation.navigate("Auditoria", { id: item.id })}
           >
-            <Text style={styles.buttonText}> Auditar</Text>
+            <Text style={styles.buttonText}>Auditar</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => handleGeneratePDF(item.id)}
+            onPress={() => abrirCerrarAuditoria(item.id)}
           >
             <Text style={styles.buttonText}>Cerrar Auditoría</Text>
           </TouchableOpacity>
