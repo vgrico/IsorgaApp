@@ -44,6 +44,8 @@ import PersonalLista from "../screens/RecursosHumanos/PersonalLista";
 
 
 import InformeNuevo from "../screens/Informes/InformeNuevo";
+import GestionInformes from "../screens/Informes/GestionInformes";
+import InformesLista from "../screens/Informes/InformesLista";
 
 
 import Equipos from "../screens/Equipos/Equipos";
@@ -58,6 +60,7 @@ import GestionResiduos from "../screens/Residuos/GestionResiduos";
 import MisGestiones from "../screens/Residuos/MisGestiones";
 import MisRetiradas from "../screens/Residuos/MisRetiradas";
 import MisResiduos from "../screens/Residuos/MisResiduos";
+import NuevaRetirada from "../screens/Residuos/NuevaRetirada";
 
 
 import NoConformidades from "../screens/NoConformidades/NoConformidades";
@@ -169,7 +172,9 @@ const AppNavigation = () => {
 
 
         <Stack.Screen name="InformeNuevo" component={InformeNuevo} />
-
+        <Stack.Screen name="GestionInformes" component={GestionInformes} />
+        <Stack.Screen name="InformesLista" component={InformesLista} />
+        
 
         <Stack.Screen name="Equipos" component={Equipos} />
         <Stack.Screen name="ListaEquipos" component={ListaEquipos} />
@@ -184,6 +189,7 @@ const AppNavigation = () => {
         <Stack.Screen name="MisRetiradas" component={MisRetiradas} />
         <Stack.Screen name="MisResiduos" component={MisResiduos} />
         <Stack.Screen name="MisGestiones" component={MisGestiones} />
+        <Stack.Screen name="NuevaRetirada" component={NuevaRetirada} />
        
        
         <Stack.Screen name="RequisitosLegales" component={RequisitosLegales} />

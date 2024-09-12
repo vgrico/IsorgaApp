@@ -11,9 +11,10 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { COLORS, SIZES } from '../../constants';
+import { COLORS, SIZES, icons } from '../../constants';
 import RenderHtml from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native'; // Para manejar el tamaño de la pantalla
 
@@ -111,7 +112,7 @@ const NuevaRuta = ({ route, navigation }) => {
     }
 
     try {
-      const response = await fetch('https://momdel.es/dev/api/app/guardarRuta.php', {
+      const response = await fetch('https://isorga.com/api/app/guardarRuta.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -180,16 +181,38 @@ const NuevaRuta = ({ route, navigation }) => {
     }
   };
 
+  const renderHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            source={icons.arrowBack}
+            resizeMode="contain"
+            style={styles.backIcon}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>RUTA AUDITORÍA</Text>
+        <View style={{ flex: 1 }} />
+        <Image
+          source={require("../../assets/images/logoIsorga.png")}
+          style={styles.logo}
+        />
+      </View>
+    );
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.area}>
+        {renderHeader()}
+        <View style={styles.horizontalLine} />
         <View style={styles.tabsContainer}>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'datosRuta' && styles.activeTab]}
             onPress={() => handleTabChange('datosRuta')}
           >
             <Text style={[styles.tabText, activeTab === 'datosRuta' && styles.activeTabText]}>
-              Datos Ruta
+              DATOS RUTA
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -197,7 +220,7 @@ const NuevaRuta = ({ route, navigation }) => {
             onPress={() => handleTabChange('noConformidad')}
           >
             <Text style={[styles.tabText, activeTab === 'noConformidad' && styles.activeTabText]}>
-              No Conformidad/Oportunidad
+              OBSERVACIONES
             </Text>
           </TouchableOpacity>
         </View>
@@ -207,16 +230,14 @@ const NuevaRuta = ({ route, navigation }) => {
           <ScrollView contentContainerStyle={styles.content}>
             {/* Mostrar título y observaciones de la auditoría */}
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Título Auditoría:</Text>
+              <Text style={styles.label}>PREGUNTA</Text>
               <Text style={styles.text}>{tituloAuditoria}</Text>
-            </View>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Observaciones:</Text>
               <RenderHtml contentWidth={width} source={{ html: observacionesAuditoria }} />
             </View>
+            <View style={styles.horizontalLineInterno} />
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Personal Auditado:</Text>
+              <Text style={styles.label}>PERSONAL AUDITADO</Text>
               <TextInput
                 style={styles.input}
                 value={personalAuditado}
@@ -227,7 +248,7 @@ const NuevaRuta = ({ route, navigation }) => {
             </View>
 
             <View style={styles.formGroup}>
-              <Text style={styles.label}>RUTA AUDITORIA Y FUENTES DE EVIDENCIAS:</Text>
+              <Text style={styles.label}>EVIDENCIAS RUTA</Text>
               <TextInput
                 style={[styles.input, styles.textArea]}
                 value={fuentesEvidencias}
@@ -240,7 +261,7 @@ const NuevaRuta = ({ route, navigation }) => {
             </View>
 
             <TouchableOpacity style={styles.saveButton} onPress={guardarRuta}>
-              <Text style={styles.saveButtonText}>Guardar</Text>
+              <Text style={styles.saveButtonText}>GUARDAR RUTA</Text>
             </TouchableOpacity>
           </ScrollView>
         )}
@@ -248,12 +269,7 @@ const NuevaRuta = ({ route, navigation }) => {
         {/* Contenido de la segunda pestaña: No Conformidad/Oportunidad */}
         {activeTab === 'noConformidad' && (
           <View style={styles.content}>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => setModalVisible(true)}
-            >
-              <Text style={styles.addButtonText}>Añadir No Conformidad</Text>
-            </TouchableOpacity>
+
 
             {noConformidades.length > 0 ? (
               <FlatList
@@ -268,6 +284,14 @@ const NuevaRuta = ({ route, navigation }) => {
             ) : (
               <Text style={styles.placeholderText}>No hay no conformidades registradas.</Text>
             )}
+      <View style={styles.horizontalLine} />
+
+<TouchableOpacity
+              style={styles.addButton}
+              onPress={() => setModalVisible(true)}
+            >
+              <Text style={styles.addButtonText}>AÑADIR OBSERVACIONES</Text>
+            </TouchableOpacity>
 
             <Modal
               animationType="slide"
@@ -279,7 +303,11 @@ const NuevaRuta = ({ route, navigation }) => {
                 <View style={styles.modalContainer}>
                   <TouchableWithoutFeedback>
                     <View style={styles.modalContent}>
-                      <Text style={styles.modalTitle}>Añadir No Conformidad</Text>
+                      <Text style={styles.modalTitle}>AÑADIR OBSERVACIÓN</Text>
+
+                      <View style={styles.horizontalLine} />
+                      <Text style={styles.modalText}>1.- Elegir Tipo Observación</Text>
+
 
                       {/* Selección del tipo de no conformidad */}
                       <FlatList
@@ -304,6 +332,8 @@ const NuevaRuta = ({ route, navigation }) => {
                           </TouchableOpacity>
                         )}
                       />
+      <View style={styles.horizontalLine} />
+      <Text style={styles.modalText}>2.- Descripción de la Observación</Text>
 
                       <TextInput
                         style={styles.input}
@@ -367,7 +397,8 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   formGroup: {
-    marginBottom: 20,
+    marginBottom: 5,
+    marginTop:10,
   },
   label: {
     fontSize: 16,
@@ -379,6 +410,7 @@ const styles = StyleSheet.create({
     borderColor: COLORS.gray,
     borderRadius: 5,
     padding: 10,
+    marginTop: 10,
     fontSize: 16,
     color: COLORS.black,
   },
@@ -387,7 +419,7 @@ const styles = StyleSheet.create({
     color: COLORS.black,
   },
   textArea: {
-    height: 100,
+    height: 200,
     textAlignVertical: 'top',
   },
   saveButton: {
@@ -458,11 +490,46 @@ const styles = StyleSheet.create({
     color: COLORS.white,
   },
   cancelButton: {
+    backgroundColor: COLORS.warning,
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
     marginTop: 20,
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: COLORS.primary,
+    color: COLORS.white,
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  headerTitle: {
+    fontSize: SIZES.h3,
+    fontWeight: "bold",
+    marginLeft: 16,
+  },
+  backIcon: {
+    height: 18,
+    width: 18,
+  },
+  horizontalLine: {
+    borderBottomColor: COLORS.black,
+    borderBottomWidth: 1,
+    marginVertical: 20,
+  },
+  horizontalLineInterno: {
+    borderBottomColor: COLORS.black,
+    borderBottomWidth: 3,
+    marginVertical: 10,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
   },
 });
 

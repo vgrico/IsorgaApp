@@ -58,12 +58,32 @@ const GestionResiduos = ({ navigation }) => {
       imagen: require("../../assets/images/misResiduos.webp"),
     },
     {
-      moduloTexto: "RETIRADA RESIDUOS",
+      moduloTexto: "LISTA RETIRADAS",
       color: COLORS.grayscale100,
       url: "MisRetiradas",
       imagen: require("../../assets/images/misRetiradas.webp"),
     },
+    {
+      moduloTexto: "NUEVA RETIRADA",
+      color: COLORS.grayscale100,
+      url: "NuevaRetirada",
+      imagen: require("../../assets/images/misRetiradas.webp"),
+    },
   ];
+
+  const colorPalette = [
+    '#88B04B', // Green
+    '#92A8D1', // Blue
+    '#F7CAC9', // Rose
+    '#FF6F61', // Coral
+    '#6B5B95', // Plum
+    '#955251', // Mauve
+    '#B565A7', // Violet
+    '#009B77', // Teal
+    '#DD4124', // Red
+    '#D65076', // Pink
+  ];
+
 
   const fetchRevisiones = async () => {
     try {
@@ -94,12 +114,13 @@ const GestionResiduos = ({ navigation }) => {
 
   const renderModulo = ({ item, index }) => {
     const isRetirada = item.moduloTexto === "RETIRADA RESIDUOS";
+    const backgroundColor = colorPalette[index % colorPalette.length]; 
   
     return (
       <TouchableOpacity
         style={[
           styles.moduloContainer,
-          isRetirada && styles.retiradasContainer, 
+          isRetirada && styles.retiradasContainer,  { backgroundColor },
         ]}
         onPress={() => navigation.navigate(item.url)}
       >

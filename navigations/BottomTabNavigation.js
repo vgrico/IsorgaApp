@@ -16,7 +16,7 @@ import Perfil from "../screens/General/Perfil";
 import Box from "../screens/Box/Box";
 import Inicio from "../screens/General/Inicio";
 import Todo from "../screens/General/Todo";
-import Informes from "../screens/Informes/Informes";
+import Informes from "../screens/Informes/GestionInformes";
 import Formulario from "../screens/General/Informes";
 import FormularioResiduos from "../screens/General/FormularioResiduos";
 import InformeAH from "../screens/General/InformeAH";
@@ -82,21 +82,8 @@ const BottomTabNavigation = () => {
           ),
         }}
       />
-            <Tab.Screen
-        name="Residuos"
-        component={FormularioResiduos}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon
-              focused={focused}
-              icon={focused ? icons.document : icons.documentOutline}
-              label="Residuos"
-            />
-          ),
-        }}
-      />
 
-<Tab.Screen
+      <Tab.Screen
         name="InformeAH"
         component={InformeAH}
         options={{

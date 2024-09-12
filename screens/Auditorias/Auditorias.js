@@ -6,8 +6,9 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
+  Image,
 } from "react-native";
-import { COLORS, SIZES } from "../../constants";
+import { COLORS, SIZES, icons } from "../../constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -60,6 +61,26 @@ const Auditorias = ({ navigation }) => {
     }
   };
 
+  const renderHeader = () => {
+    return (
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Image
+            source={icons.arrowBack}
+            resizeMode="contain"
+            style={styles.backIcon}
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>LISTA AUDITORÍAS</Text>
+        <View style={{ flex: 1 }} />
+        <Image
+          source={require("../../assets/images/logoIsorga.png")}
+          style={styles.logo}
+        />
+      </View>
+    );
+  };
+
   const handleGeneratePDF = (id) => {
     // Lógica para generar el PDF
     console.log(`Generar PDF para la auditoría ${id}`);
@@ -67,13 +88,15 @@ const Auditorias = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <View style={[styles.card, getCardStyle(item.estado)]}>
+      <Text style={styles.detailsTitle}>{item.centroNombre}</Text>
+      <View style={styles.horizontalLine} />
+
       <Text style={styles.title}>{item.titulo}</Text>
-      <Text style={styles.details}>{item.centroNombre}</Text>
       <Text style={styles.details}>
-        Fechas de auditoría: {item.fechasAuditoria}
+        Fechas Auditoría: {item.fechasAuditoria}
       </Text>
-      <Text style={styles.details}>Fecha de cierre: {item.fecha_cierre}</Text>
-      <Text style={styles.details}>Observaciones: {item.observaciones}</Text>
+      <Text style={styles.details}>Fecha Cierre: {item.fecha_cierre}</Text>
+      <Text style={styles.details}>Observac.: {item.observaciones}</Text>
 
       {item.estado === 1 ? (
         <View style={styles.buttonContainer}>
@@ -91,20 +114,29 @@ const Auditorias = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       ) : (
-        <TouchableOpacity
-          style={styles.card}
-          onPress={() => navigation.navigate("Auditoria", { id: item.id })}
-        >
-          <Text style={styles.buttonText}>Ir a Auditoría</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate("Auditoria", { id: item.id })}
+          >
+            <Text style={styles.buttonText}> Auditar</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => handleGeneratePDF(item.id)}
+          >
+            <Text style={styles.buttonText}>Cerrar Auditoría</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
 
   return (
     <SafeAreaView style={styles.area}>
+      {renderHeader()}
+      <View style={styles.horizontalLine} />
       <View style={styles.container}>
-        <Text style={styles.sectionHeader}>Auditorías</Text>
         <FlatList
           data={datosSeries}
           keyExtractor={(item) => item.id.toString()}
@@ -131,6 +163,22 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     marginBottom: 16,
   },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+  },
+  headerTitle: {
+    fontSize: SIZES.h3,
+    fontWeight: "bold",
+    marginLeft: 16,
+  },
+  backIcon: {
+    height: 18,
+    width: 18,
+  },
   card: {
     padding: 16,
     borderRadius: 12,
@@ -147,6 +195,11 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    fontFamily: "bold",
+    color: COLORS.black,
+  },
+  detailsTitle: {
+    fontSize: 16,
     fontFamily: "bold",
     color: COLORS.black,
   },
@@ -169,6 +222,16 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     textAlign: "center",
+  },
+  horizontalLine: {
+    borderBottomColor: COLORS.black,
+    borderBottomWidth: 1,
+    marginVertical: 20,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    resizeMode: "contain",
   },
 });
 
