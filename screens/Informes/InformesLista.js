@@ -141,8 +141,8 @@ const InformeLista = ({ route, navigation }) => {
         <View style={styles.row}>
           <Text style={[styles.cell, styles.codigoCell]}>{item.fecha}</Text>
           <Text style={[styles.cell, styles.codigoCell]}>{item.hora}</Text>
-          <Text style={[styles.cell, styles.tituloCell]}>{item.titulo}</Text>
-          <Text style={[styles.cell, styles.tituloCell]}>{item.centroNombre}</Text>
+          {/* <Text style={[styles.cell, styles.tituloCell]}>{item.titulo}</Text> */}
+          {/* <Text style={[styles.cell, styles.tituloCell]}>{item.centroNombre}</Text> */}
           <Text style={[styles.cell, styles.tituloCell]}>{item.usuarioNombre}</Text>
         </View>
       </TouchableOpacity>
@@ -176,12 +176,12 @@ const InformeLista = ({ route, navigation }) => {
           <Text style={[styles.headerCell, styles.codigoCell]}>
             Hora
           </Text>
-          <Text style={[styles.headerCell, styles.tituloCell]}>
+          {/* <Text style={[styles.headerCell, styles.tituloCell]}>
             Tipo Informe
-          </Text>
-          <Text style={[styles.headerCell, styles.tituloCell]}>
+          </Text> */}
+          {/* <Text style={[styles.headerCell, styles.tituloCell]}>
             Centro
-          </Text>
+          </Text> */}
           <Text style={[styles.headerCell, styles.tituloCell]}>
             Usuario
           </Text>
@@ -293,11 +293,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   codigoCell: {
-    flex: 2, // 20%
+    flex: 3, // 20%
     fontSize: 12,
   },
   tituloCell: {
-    flex: 6, // 70%
+    flex: 4, // 70%
     fontSize: 12,
   },
   horizontalLine: {

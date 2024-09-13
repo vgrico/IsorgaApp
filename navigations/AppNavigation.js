@@ -49,6 +49,7 @@ import InformesLista from "../screens/Informes/InformesLista";
 import InformeStandard from "../screens/Informes/InformeStandard";
 import InformeAH from "../screens/Informes/InformeAH";
 import Informe5s from "../screens/Informes/Informe5s";
+import InformeActual from "../screens/Informes/InformeActual";
 
 
 import Equipos from "../screens/Equipos/Equipos";
@@ -182,6 +183,7 @@ const AppNavigation = () => {
         <Stack.Screen name="InformeAH" component={InformeAH} />
         <Stack.Screen name="Informe5s" component={Informe5s} />
         <Stack.Screen name="Informe5sRespondido" component={Informe5sRespondido} />
+        <Stack.Screen name="InformeActual" component={InformeActual} />
         
 
         <Stack.Screen name="Equipos" component={Equipos} />
