@@ -15,7 +15,7 @@ import { COLORS, icons, SIZES } from "../../constants";
 
 const InformeLista = ({ route, navigation }) => {
 
-  const { informe } = route.params;
+  const { informe, titulo } = route.params;
 
   console.log(informe);
 
@@ -96,25 +96,28 @@ const InformeLista = ({ route, navigation }) => {
             style={styles.backIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>LISTA INFORMES</Text>
+        <Text style={styles.headerTitle}>{titulo}</Text>
         <View style={{ flex: 1 }} />
   
-        {/* Botón de Nuevo Informe con lógica condicional basada en el ID */}
         <TouchableOpacity
-          style={styles.newReportButton}
+          style={styles.iconButton}
           onPress={() => {
             if (informe === 1) {
-              navigation.navigate("InformeStandard", { informeId: informe });
+              navigation.navigate("InformeStandard", { informeId: informe, titulo });
             } else if (informe === 3) {
-              navigation.navigate("InformeAH", { informeId: informe });
+              navigation.navigate("InformeAH", { informeId: informe, titulo });
             } else if (informe === 5) {
-              navigation.navigate("Informe5s", { informeId: informe });
+              navigation.navigate("Informe5s", { informeId: informe, titulo });
             } else{
-              navigation.navigate("InformeStandard", { informeId: informe });
+              navigation.navigate("InformeStandard", { informeId: informe, titulo });
             }
           }}
         >
-          <Text style={styles.newReportButtonText}>Nuevo Informe</Text>
+          <Image
+            source={icons.plus} // Usa un ícono de "más" de tus recursos
+            resizeMode="contain"
+            style={styles.iconImage}
+          />
         </TouchableOpacity>
   
         <TouchableOpacity onPress={() => navigation.navigate("Inicio")}>
@@ -126,6 +129,7 @@ const InformeLista = ({ route, navigation }) => {
       </View>
     );
   };
+
 
   const renderModulo = ({ item }) => {
     return (
@@ -306,19 +310,19 @@ const styles = StyleSheet.create({
     height: 50,
     resizeMode: "contain",
   },
-  newReportButton: {
+  iconButton: {
     backgroundColor: COLORS.primary, // Color de fondo del botón
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 5,
+    padding: 10,
+    borderRadius: 25, // Hacer que el botón sea redondo
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 10, // Espaciado a la derecha del botón
   },
-  newReportButtonText: {
-    color: COLORS.white, // Color del texto
-    fontWeight: "bold",
-    fontSize: 14,
+  iconImage: {
+    width: 24,
+    height: 24,
+    tintColor: COLORS.white, // Icono de color blanco
   },
-
 });
 
 export default InformeLista;

@@ -69,7 +69,7 @@ const BottomTabNavigation = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Formulario"
         component={Formulario}
         options={{
@@ -108,7 +108,7 @@ const BottomTabNavigation = () => {
             />
           ),
         }}
-      />
+      /> */}
 
       {/* <Tab.Screen
         name="tareas"

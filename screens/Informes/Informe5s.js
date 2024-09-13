@@ -12,19 +12,24 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from "@react-native-community/datetimepicker"; // Importa DateTimePicker
 import { COLORS, SIZES, icons } from "../../constants";
 
-// Función para obtener la fecha actual en formato YYYY-MM-DD
+// Función para obtener la fecha actual en formato YYYY-MM-DD HH:MM:SS
 const obtenerFechaActual = () => {
   const fecha = new Date();
   const year = fecha.getFullYear();
   const month = String(fecha.getMonth() + 1).padStart(2, "0");
   const day = String(fecha.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  const hours = String(fecha.getHours()).padStart(2, "0");
+  const minutes = String(fecha.getMinutes()).padStart(2, "0");
+  const seconds = String(fecha.getSeconds()).padStart(2, "0");
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
 const Informe5s = ({ route, navigation }) => {
-  
+  const {  titulo } = route.params;
+
   const [titulos, setTitulos] = useState([]);
   const [preguntas, setPreguntas] = useState({});
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -32,6 +37,15 @@ const Informe5s = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [isorgaId, setIsorgaId] = useState(null);
   const [centroId, setCentroId] = useState(null);
+
+  // Estados para manejar fecha y hora
+  const [fechaInforme, setFechaInforme] = useState(new Date()); // Fecha
+  const [horaInforme, setHoraInforme] = useState(new Date()); // Hora
+
+  // Estado para manejar las áreas
+  const [areas, setAreas] = useState([]);
+  const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedAreaNombre, setSelectedAreaNombre] = useState("");
 
   // Solicitar permisos de cámara cuando el componente se monta
   useEffect(() => {
@@ -93,6 +107,21 @@ const Informe5s = ({ route, navigation }) => {
     fetchTitulosYPreguntas();
   }, []);
 
+  // Cargar áreas desde la API
+  useEffect(() => {
+    const fetchAreas = async () => {
+      try {
+        const response = await fetch("https://isorga.com/api/listadoAreas.php");
+        const data = await response.json();
+        setAreas(data);
+      } catch (error) {
+        console.error("Error fetching areas:", error);
+      }
+    };
+
+    fetchAreas();
+  }, []);
+
   // Cambiar el valor de la respuesta con valores OK/KO (0,1,2,3)
   const handleAnswerChange = (preguntaId, answer) => {
     const valorRespuesta = {
@@ -109,6 +138,12 @@ const Informe5s = ({ route, navigation }) => {
         respuesta: valorRespuesta,
       },
     }));
+  };
+
+  // Seleccionar área
+  const seleccionarArea = (id, nombre) => {
+    setSelectedArea(id);
+    setSelectedAreaNombre(nombre);
   };
 
   // Función para tomar una foto con la cámara
@@ -133,7 +168,7 @@ const Informe5s = ({ route, navigation }) => {
     }
   };
 
-  // Función para validar que todas las preguntas de tipo "OK/KO" hayan sido respondidas
+  // Validar que todas las preguntas de tipo "OK/KO" hayan sido respondidas
   const validarRespuestas = () => {
     const respuestasIncompletas = Object.keys(preguntas).some((tituloId) =>
       preguntas[tituloId].some(
@@ -154,16 +189,28 @@ const Informe5s = ({ route, navigation }) => {
     return true;
   };
 
-  // Función para enviar los datos a guardarInforme.php
+  // Enviar los datos a guardarInforme.php
   const enviarDatosAGuardarInforme = async () => {
-    if (!validarRespuestas()) {
-      return; // Si hay preguntas sin responder, no se envían los datos
+    if (!validarRespuestas() || !selectedArea) {
+      Alert.alert("Error", "Debe seleccionar un área antes de continuar.");
+      return;
     }
+
+    // Concatenar la fecha y la hora seleccionadas
+    const fechaCompleta = new Date(
+      fechaInforme.getFullYear(),
+      fechaInforme.getMonth(),
+      fechaInforme.getDate(),
+      horaInforme.getHours(),
+      horaInforme.getMinutes(),
+      horaInforme.getSeconds()
+    ).toISOString().split(".")[0]; // Convertir a formato ISO y quitar los milisegundos
 
     const formData = new FormData();
     formData.append("isorgaId", isorgaId);
     formData.append("centroId", centroId);
-    formData.append("fecha", obtenerFechaActual());
+    formData.append("fecha", fechaCompleta); // Enviar la fecha y hora combinadas
+    formData.append("areaId", selectedArea); // Enviar el ID del área seleccionada
     formData.append("observacionesGenerales", observaciones);
 
     Object.keys(selectedAnswers).forEach((preguntaId) => {
@@ -224,7 +271,7 @@ const Informe5s = ({ route, navigation }) => {
             style={styles.backIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Formulario</Text>
+        <Text style={styles.headerTitle}>{titulo}</Text>
         <View style={{ flex: 1 }} />
         <Image
           source={require("../../assets/images/logoIsorga.png")}
@@ -233,18 +280,62 @@ const Informe5s = ({ route, navigation }) => {
       </View>
       <View style={styles.horizontalLine} />
 
-      <View style={styles.observacionesContainer}>
-        <Text style={styles.observacionesLabel}>Observaciones Generales:</Text>
-        <TextInput
-          style={styles.input}
-          value={observaciones}
-          onChangeText={setObservaciones}
-          placeholder="Escribe tus observaciones"
-          placeholderTextColor={COLORS.gray}
-        />
-      </View>
-
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Seleccionar Área</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {areas.map((area) => (
+              <TouchableOpacity
+                key={area.id}
+                onPress={() => seleccionarArea(area.id, area.area)}
+                style={[
+                  styles.gestionButton,
+                  selectedArea === area.id && styles.gestionButtonSelected,
+                ]}
+              >
+                <Text style={styles.gestionButtonText}>{area.area}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          {selectedAreaNombre && (
+            <Text style={styles.selectedGestionText}>
+              Área seleccionada: {selectedAreaNombre}
+            </Text>
+          )}
+        </View>
+
+        <View style={[styles.inputContainer, { flexDirection: "row"}]}>
+          <DateTimePicker
+            value={fechaInforme || new Date()}
+            mode="date"
+            display="default"
+            onChange={(event, selectedDate) =>
+              setFechaInforme(selectedDate || fechaInforme)
+            }
+          />
+          <DateTimePicker
+            value={horaInforme || new Date()}
+            mode="time"
+            display="default"
+            onChange={(event, selectedTime) =>
+              setHoraInforme(selectedTime || horaInforme)
+            }
+          />
+        </View>
+
+        <View style={styles.observacionesContainer}>
+          <Text style={styles.observacionesLabel}>
+            Observaciones Generales:
+          </Text>
+          <TextInput
+            style={styles.input}
+            value={observaciones}
+            onChangeText={setObservaciones}
+            placeholder="Escribe tus observaciones"
+            placeholderTextColor={COLORS.gray}
+          />
+        </View>
+
         {titulos.map((titulo) => (
           <View key={titulo.id} style={styles.card}>
             <Text style={styles.titulo}>{titulo.titulo}</Text>
@@ -376,6 +467,26 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.black,
     borderBottomWidth: 1,
     marginVertical: 10,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  gestionButton: {
+    padding: 10,
+    backgroundColor: COLORS.lightGray,
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  gestionButtonSelected: {
+    backgroundColor: COLORS.primary,
+  },
+  gestionButtonText: {
+    color: COLORS.black,
+  },
+  selectedGestionText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: COLORS.primary,
   },
   observacionesContainer: {
     paddingHorizontal: 16,

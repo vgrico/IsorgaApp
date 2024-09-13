@@ -74,7 +74,7 @@ const GestionInformes = ({ navigation }) => {
     return (
       <TouchableOpacity
         style={styles.moduloContainer}
-        onPress={() => navigation.navigate("InformesLista", { informe: item.id })}
+        onPress={() => navigation.navigate("InformesLista", { informe: item.id, titulo:item.titulo })}
       >
         <Text style={styles.moduloTexto}>{item.titulo}</Text>
       </TouchableOpacity>

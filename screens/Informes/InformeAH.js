@@ -15,16 +15,21 @@ import * as ImagePicker from "expo-image-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { COLORS, SIZES, icons } from "../../constants";
 
-// Función para obtener la fecha actual en formato YYYY-MM-DD
+// Función para obtener la fecha actual en formato YYYY-MM-DD HH:MM:SS
 const obtenerFechaActual = () => {
   const fecha = new Date();
   const year = fecha.getFullYear();
   const month = String(fecha.getMonth() + 1).padStart(2, "0");
   const day = String(fecha.getDate()).padStart(2, "0");
+  const hours = String(fecha.getHours()).padStart(2, "0");
+  const minutes = String(fecha.getMinutes()).padStart(2, "0");
+  const seconds = String(fecha.getSeconds()).padStart(2, "0");
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
 const InformeAH = ({ route, navigation }) => {
+  const { titulo } = route.params;
+
   const [titulos, setTitulos] = useState([]);
   const [preguntas, setPreguntas] = useState({});
   const [selectedAnswers, setSelectedAnswers] = useState({});
@@ -32,6 +37,8 @@ const InformeAH = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [isorgaId, setIsorgaId] = useState(null);
   const [centroId, setCentroId] = useState(null);
+  const [fechaInforme, setFechaInforme] = useState(new Date()); // Estado para la fecha
+  const [horaInforme, setHoraInforme] = useState(new Date()); // Estado para la hora
 
   // Solicitar permisos de cámara cuando el componente se monta
   useEffect(() => {
@@ -169,10 +176,20 @@ const InformeAH = ({ route, navigation }) => {
       return; // Si hay preguntas sin responder, no se envían los datos
     }
 
+    // Concatenar la fecha y la hora seleccionadas
+    const fechaCompleta = new Date(
+      fechaInforme.getFullYear(),
+      fechaInforme.getMonth(),
+      fechaInforme.getDate(),
+      horaInforme.getHours(),
+      horaInforme.getMinutes(),
+      horaInforme.getSeconds()
+    ).toISOString().split(".")[0]; // Convertir a formato ISO y quitar los milisegundos
+
     const formData = new FormData();
     formData.append("isorgaId", isorgaId);
     formData.append("centroId", centroId);
-    formData.append("fecha", obtenerFechaActual());
+    formData.append("fecha", fechaCompleta); // Enviar la fecha y hora combinadas
     formData.append("observacionesGenerales", observaciones);
 
     Object.keys(selectedAnswers).forEach((preguntaId) => {
@@ -244,7 +261,7 @@ const InformeAH = ({ route, navigation }) => {
             style={styles.backIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Formulario</Text>
+        <Text style={styles.headerTitle}>{titulo}</Text>
         <View style={{ flex: 1 }} />
         <Image
           source={require("../../assets/images/logoIsorga.png")}
@@ -253,18 +270,41 @@ const InformeAH = ({ route, navigation }) => {
       </View>
       <View style={styles.horizontalLine} />
 
-      <View style={styles.observacionesContainer}>
-        <Text style={styles.observacionesLabel}>Observaciones Generales:</Text>
-        <TextInput
-          style={styles.input}
-          value={observaciones}
-          onChangeText={setObservaciones}
-          placeholder="Escribe tus observaciones"
-          placeholderTextColor={COLORS.gray}
-        />
-      </View>
-
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.inputContainer}>
+          <DateTimePicker
+            value={fechaInforme || new Date()}
+            mode="date"
+            display="default"
+            onChange={(event, selectedDate) =>
+              setFechaInforme(selectedDate || fechaInforme)
+            }
+          />
+          <DateTimePicker
+            value={horaInforme || new Date()}
+            mode="time"
+            display="default"
+            onChange={(event, selectedTime) =>
+              setHoraInforme(selectedTime || horaInforme)
+            }
+          />
+        </View>
+
+
+
+        <View style={styles.observacionesContainer}>
+          <Text style={styles.observacionesLabel}>
+            Observaciones Generales:
+          </Text>
+          <TextInput
+            style={styles.input}
+            value={observaciones}
+            onChangeText={setObservaciones}
+            placeholder="Escribe tus observaciones"
+            placeholderTextColor={COLORS.gray}
+          />
+        </View>
+
         {titulos.map((titulo) => (
           <View key={titulo.id} style={styles.card}>
             <Text style={styles.titulo}>{titulo.titulo}</Text>
@@ -320,13 +360,11 @@ const InformeAH = ({ route, navigation }) => {
                     </View>
                   </View>
 
-                  {/* Selección de fecha prevista individual para cada pregunta */}
                   <View style={styles.inputContainer}>
                     <Text style={styles.label}>Fecha Prevista:</Text>
                     <DateTimePicker
                       value={
-                        selectedAnswers[pregunta.id]?.fechaPrevista ||
-                        new Date()
+                        selectedAnswers[pregunta.id]?.fechaPrevista || new Date()
                       }
                       mode="date"
                       display="default"
@@ -422,6 +460,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   inputContainer: {
+    flexDirection:"row",
     marginBottom: 20,
   },
   label: {
@@ -449,7 +488,7 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: 16,
-    paddingBottom: 50, // Espacio adicional para el final del scroll
+    paddingBottom: 50,
   },
   card: {
     backgroundColor: "#fff",

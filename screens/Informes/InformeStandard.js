@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import DateTimePicker from "@react-native-community/datetimepicker"; // Importa DateTimePicker
 import { COLORS, SIZES, icons } from "../../constants";
 
 // Función para obtener la fecha actual en formato YYYY-MM-DD HH:MM:SS
@@ -28,7 +29,7 @@ const obtenerFechaActual = () => {
 };
 
 const InformeStandard = ({ route, navigation }) => {
-  const { id } = route.params;
+  const { informeId, titulo } = route.params;
 
   const [titulos, setTitulos] = useState([]);
   const [preguntas, setPreguntas] = useState({});
@@ -39,8 +40,8 @@ const InformeStandard = ({ route, navigation }) => {
   const [centroId, setCentroId] = useState(null);
 
   const [usuario, setUsuario] = useState("");
-  const [fecha, setFecha] = useState(obtenerFechaActual().split(" ")[0]);
-  const [hora, setHora] = useState(obtenerFechaActual().split(" ")[1]);
+  const [fechaInforme, setFechaInforme] = useState(new Date());
+  const [horaInforme, setHoraInforme] = useState(new Date());
 
   // Solicitar permisos de cámara cuando el componente se monta
   useEffect(() => {
@@ -73,11 +74,12 @@ const InformeStandard = ({ route, navigation }) => {
 
   // Cargar los títulos y preguntas desde la API al iniciar
   useEffect(() => {
+    console.log(informeId)
     const fetchTitulosYPreguntas = async () => {
       try {
         setLoading(true);
         const responseTitulos = await fetch(
-          `https://isorga.com/api/titulosInforme.php?id=3`
+          `https://isorga.com/api/titulosInforme.php?id=${informeId}`
         );
         const titulosData = await responseTitulos.json();
         setTitulos(titulosData);
@@ -100,7 +102,7 @@ const InformeStandard = ({ route, navigation }) => {
     };
 
     fetchTitulosYPreguntas();
-  }, []);
+  }, [informeId]);
 
   // Cambiar el valor de la respuesta a 1 o 0
   const handleAnswerChange = (preguntaId, answer, columna = null) => {
@@ -162,10 +164,20 @@ const InformeStandard = ({ route, navigation }) => {
       return; // Si hay preguntas sin responder, no se envían los datos
     }
 
+    // Concatenar la fecha y la hora seleccionadas
+    const fechaCompleta = new Date(
+      fechaInforme.getFullYear(),
+      fechaInforme.getMonth(),
+      fechaInforme.getDate(),
+      horaInforme.getHours(),
+      horaInforme.getMinutes(),
+      horaInforme.getSeconds()
+    ).toISOString().split(".")[0]; // Convertir a formato ISO
+
     const formData = new FormData();
     formData.append("isorgaId", isorgaId);
     formData.append("centroId", centroId);
-    formData.append("fecha", obtenerFechaActual());
+    formData.append("fecha", fechaCompleta); // Enviar fecha y hora combinadas
     formData.append("observacionesGenerales", observaciones);
 
     Object.keys(selectedAnswers).forEach((preguntaId) => {
@@ -229,7 +241,7 @@ const InformeStandard = ({ route, navigation }) => {
             style={styles.backIcon}
           />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Formulario</Text>
+        <Text style={styles.headerTitle}>{titulo}</Text>
         <View style={{ flex: 1 }} />
         <Image
           source={require("../../assets/images/logoIsorga.png")}
@@ -238,9 +250,29 @@ const InformeStandard = ({ route, navigation }) => {
       </View>
       <View style={styles.horizontalLine} />
 
-
-
       <ScrollView contentContainerStyle={styles.content}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Fecha y Hora del Informe</Text>
+          <View style={{ flexDirection: "row" }}>
+            <DateTimePicker
+              value={fechaInforme}
+              mode="date"
+              display="default"
+              onChange={(event, selectedDate) =>
+                setFechaInforme(selectedDate || fechaInforme)
+              }
+            />
+            <DateTimePicker
+              value={horaInforme}
+              mode="time"
+              display="default"
+              onChange={(event, selectedTime) =>
+                setHoraInforme(selectedTime || horaInforme)
+              }
+            />
+          </View>
+        </View>
+
         {titulos.map((titulo) => (
           <View key={titulo.id} style={styles.card}>
             <Text style={styles.titulo}>{titulo.titulo}</Text>
@@ -325,48 +357,6 @@ const InformeStandard = ({ route, navigation }) => {
 
         <View style={{ height: 50 }} />
       </ScrollView>
-
-            <View style={styles.horizontalLine} />
-      {/* Campos para el usuario, fecha y hora */}
-      {/* <View style={styles.userDataContainer}>
-        <Text style={styles.label}>Usuario</Text>
-        <TextInput
-          style={styles.input}
-          value={usuario}
-          onChangeText={setUsuario}
-          placeholder="Nombre del usuario"
-          placeholderTextColor={COLORS.gray}
-        />
-
-        <Text style={styles.label}>Fecha</Text>
-        <TextInput
-          style={styles.input}
-          value={fecha}
-          onChangeText={setFecha}
-          placeholder="YYYY-MM-DD"
-          placeholderTextColor={COLORS.gray}
-        />
-
-        <Text style={styles.label}>Hora</Text>
-        <TextInput
-          style={styles.input}
-          value={hora}
-          onChangeText={setHora}
-          placeholder="HH:MM:SS"
-          placeholderTextColor={COLORS.gray}
-        />
-      </View> */}
-
-      {/* <View style={styles.observacionesContainer}>
-        <Text style={styles.observacionesLabel}>Observaciones Generales:</Text>
-        <TextInput
-          style={styles.input}
-          value={observaciones}
-          onChangeText={setObservaciones}
-          placeholder="Escribe tus observaciones"
-          placeholderTextColor={COLORS.gray}
-        />
-      </View> */}
     </SafeAreaView>
   );
 };
@@ -407,6 +397,15 @@ const styles = StyleSheet.create({
     borderBottomColor: COLORS.black,
     borderBottomWidth: 1,
     marginVertical: 10,
+  },
+  inputContainer: {
+    marginBottom: 20,
+    paddingHorizontal: 16,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   observacionesContainer: {
     paddingHorizontal: 16,

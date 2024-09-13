@@ -242,8 +242,8 @@ const Informe5s = ({ route, navigation }) => {
           placeholderTextColor={COLORS.gray}
         />
       </View>
-
       <ScrollView contentContainerStyle={styles.content}>
+
         {titulos.map((titulo) => (
           <View key={titulo.id} style={styles.card}>
             <Text style={styles.titulo}>{titulo.titulo}</Text>
