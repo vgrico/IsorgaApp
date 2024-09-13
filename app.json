@@ -2,7 +2,7 @@
   "expo": {
     "name": "Isorga",
     "slug": "isorga",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/splashIsorga.png",
     "userInterfaceStyle": "automatic",

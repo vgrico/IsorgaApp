@@ -24,7 +24,6 @@ const obtenerFechaActual = () => {
   const hours = String(fecha.getHours()).padStart(2, "0");
   const minutes = String(fecha.getMinutes()).padStart(2, "0");
   const seconds = String(fecha.getSeconds()).padStart(2, "0");
-
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 };
 
@@ -38,8 +37,6 @@ const InformeStandard = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [isorgaId, setIsorgaId] = useState(null);
   const [centroId, setCentroId] = useState(null);
-
-  const [usuario, setUsuario] = useState("");
   const [fechaInforme, setFechaInforme] = useState(new Date());
   const [horaInforme, setHoraInforme] = useState(new Date());
 
@@ -74,7 +71,6 @@ const InformeStandard = ({ route, navigation }) => {
 
   // Cargar los títulos y preguntas desde la API al iniciar
   useEffect(() => {
-    console.log(informeId)
     const fetchTitulosYPreguntas = async () => {
       try {
         setLoading(true);
@@ -105,13 +101,24 @@ const InformeStandard = ({ route, navigation }) => {
   }, [informeId]);
 
   // Cambiar el valor de la respuesta a 1 o 0
-  const handleAnswerChange = (preguntaId, answer, columna = null) => {
+  const handleAnswerChange = (preguntaId, answer) => {
     const valorRespuesta = answer === "SI" ? 1 : 0; // 1 para "SI", 0 para "NO"
     setSelectedAnswers((prev) => ({
       ...prev,
       [preguntaId]: {
         ...prev[preguntaId],
-        [columna || "respuesta"]: valorRespuesta,
+        respuesta: valorRespuesta,
+      },
+    }));
+  };
+
+  // Manejar las observaciones para cada pregunta
+  const handleObservationChange = (preguntaId, observacion) => {
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [preguntaId]: {
+        ...prev[preguntaId],
+        observaciones: observacion,
       },
     }));
   };
@@ -189,10 +196,6 @@ const InformeStandard = ({ route, navigation }) => {
       formData.append(
         `respuestas[${preguntaId}][observaciones]`,
         respuesta.observaciones || ""
-      );
-      formData.append(
-        `respuestas[${preguntaId}][responsable]`,
-        respuesta.responsable || ""
       );
 
       if (respuesta.image) {
@@ -278,7 +281,6 @@ const InformeStandard = ({ route, navigation }) => {
             <Text style={styles.titulo}>{titulo.titulo}</Text>
             <View style={styles.horizontalLine} />
 
-
             {preguntas[titulo.id] &&
               preguntas[titulo.id].map((pregunta) => (
                 <View key={pregunta.id} style={styles.preguntaContainer}>
@@ -316,18 +318,12 @@ const InformeStandard = ({ route, navigation }) => {
                     style={styles.input}
                     placeholder="Observaciones"
                     placeholderTextColor={COLORS.gray}
+                    value={selectedAnswers[pregunta.id]?.observaciones || ""}
                     onChangeText={(text) =>
-                      handleAnswerChange(pregunta.id, text, "observaciones")
+                      handleObservationChange(pregunta.id, text)
                     }
                   />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Responsable"
-                    placeholderTextColor={COLORS.gray}
-                    onChangeText={(text) =>
-                      handleAnswerChange(pregunta.id, text, "responsable")
-                    }
-                  />
+
                   <TouchableOpacity
                     onPress={() => tomarFoto(pregunta.id)}
                     style={styles.button}
@@ -341,10 +337,9 @@ const InformeStandard = ({ route, navigation }) => {
                       style={styles.imagePreview}
                     />
                   )}
-                    <View style={styles.horizontalLine} />
+                  <View style={styles.horizontalLine} />
                 </View>
               ))}
-
           </View>
         ))}
 

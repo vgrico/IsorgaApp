@@ -135,7 +135,7 @@ const InformeLista = ({ route, navigation }) => {
     return (
       <TouchableOpacity
         onPress={() =>
-          navigation.navigate("informe", { id: item.id })
+          navigation.navigate("Informe5sRespondido", { id: item.id })
         }
       >
         <View style={styles.row}>

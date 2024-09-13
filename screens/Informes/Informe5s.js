@@ -28,7 +28,7 @@ const obtenerFechaActual = () => {
 };
 
 const Informe5s = ({ route, navigation }) => {
-  const {  titulo } = route.params;
+  const { titulo } = route.params;
 
   const [titulos, setTitulos] = useState([]);
   const [preguntas, setPreguntas] = useState({});
@@ -122,7 +122,6 @@ const Informe5s = ({ route, navigation }) => {
     fetchAreas();
   }, []);
 
-  // Cambiar el valor de la respuesta con valores OK/KO (0,1,2,3)
   const handleAnswerChange = (preguntaId, answer) => {
     const valorRespuesta = {
       OK: 0,
@@ -134,8 +133,18 @@ const Informe5s = ({ route, navigation }) => {
     setSelectedAnswers((prev) => ({
       ...prev,
       [preguntaId]: {
-        ...prev[preguntaId],
+        ...prev[preguntaId], // Mantiene las propiedades anteriores (observaciones, imagen, etc.)
         respuesta: valorRespuesta,
+      },
+    }));
+  };
+
+  const handleObservationChange = (preguntaId, observacion) => {
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [preguntaId]: {
+        ...prev[preguntaId], // Mantiene otras propiedades como `respuesta`
+        observaciones: observacion,
       },
     }));
   };
@@ -204,7 +213,9 @@ const Informe5s = ({ route, navigation }) => {
       horaInforme.getHours(),
       horaInforme.getMinutes(),
       horaInforme.getSeconds()
-    ).toISOString().split(".")[0]; // Convertir a formato ISO y quitar los milisegundos
+    )
+      .toISOString()
+      .split(".")[0]; // Convertir a formato ISO y quitar los milisegundos
 
     const formData = new FormData();
     formData.append("isorgaId", isorgaId);
@@ -304,7 +315,7 @@ const Informe5s = ({ route, navigation }) => {
           )}
         </View>
 
-        <View style={[styles.inputContainer, { flexDirection: "row"}]}>
+        <View style={[styles.inputContainer, { flexDirection: "row" }]}>
           <DateTimePicker
             value={fechaInforme || new Date()}
             mode="date"
@@ -409,9 +420,10 @@ const Informe5s = ({ route, navigation }) => {
                     style={styles.input}
                     placeholder="Observaciones"
                     placeholderTextColor={COLORS.gray}
+                    value={selectedAnswers[pregunta.id]?.observaciones || ""} 
                     onChangeText={(text) =>
-                      handleAnswerChange(pregunta.id, text, "observaciones")
-                    }
+                      handleObservationChange(pregunta.id, text)
+                    } 
                   />
                 </View>
               ))}

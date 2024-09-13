@@ -37,8 +37,8 @@ const InformeAH = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const [isorgaId, setIsorgaId] = useState(null);
   const [centroId, setCentroId] = useState(null);
-  const [fechaInforme, setFechaInforme] = useState(new Date()); // Estado para la fecha
-  const [horaInforme, setHoraInforme] = useState(new Date()); // Estado para la hora
+  const [fechaInforme, setFechaInforme] = useState(new Date());
+  const [horaInforme, setHoraInforme] = useState(new Date());
 
   // Solicitar permisos de cámara cuando el componente se monta
   useEffect(() => {
@@ -101,7 +101,7 @@ const InformeAH = ({ route, navigation }) => {
   }, []);
 
   // Cambiar el valor de la respuesta con valores OK/KO (0,1,2,3)
-  const handleAnswerChange = (preguntaId, answer, columna = null) => {
+  const handleAnswerChange = (preguntaId, answer) => {
     const valorRespuesta = {
       OK: 0,
       "KO Leve": 1,
@@ -113,7 +113,18 @@ const InformeAH = ({ route, navigation }) => {
       ...prev,
       [preguntaId]: {
         ...prev[preguntaId],
-        [columna || "respuesta"]: valorRespuesta,
+        respuesta: valorRespuesta,
+      },
+    }));
+  };
+
+  // Manejar las observaciones para cada pregunta
+  const handleObservationChange = (preguntaId, observacion) => {
+    setSelectedAnswers((prev) => ({
+      ...prev,
+      [preguntaId]: {
+        ...prev[preguntaId],
+        observaciones: observacion,
       },
     }));
   };
@@ -138,15 +149,6 @@ const InformeAH = ({ route, navigation }) => {
       Alert.alert("Error", "No se pudo acceder a la cámara.");
       console.error("Error al tomar foto: ", error);
     }
-  };
-
-  // Función para manejar la selección de la fecha prevista
-  const onChangeFechaPrevista = (preguntaId, event, selectedDate) => {
-    const currentDate = selectedDate || null;
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [preguntaId]: { ...prev[preguntaId], fechaPrevista: currentDate },
-    }));
   };
 
   // Función para validar que todas las preguntas de tipo "OK/KO" hayan sido respondidas
@@ -199,20 +201,9 @@ const InformeAH = ({ route, navigation }) => {
         respuesta.respuesta
       );
 
-      if (respuesta.fechaPrevista) {
-        formData.append(
-          `respuestas[${preguntaId}][fechaPrevista]`,
-          respuesta.fechaPrevista.toISOString().split("T")[0]
-        );
-      }
-
       formData.append(
         `respuestas[${preguntaId}][observaciones]`,
         respuesta.observaciones || ""
-      );
-      formData.append(
-        `respuestas[${preguntaId}][responsable]`,
-        respuesta.responsable || ""
       );
 
       if (respuesta.image) {
@@ -290,8 +281,6 @@ const InformeAH = ({ route, navigation }) => {
           />
         </View>
 
-
-
         <View style={styles.observacionesContainer}>
           <Text style={styles.observacionesLabel}>
             Observaciones Generales:
@@ -360,20 +349,6 @@ const InformeAH = ({ route, navigation }) => {
                     </View>
                   </View>
 
-                  <View style={styles.inputContainer}>
-                    <Text style={styles.label}>Fecha Prevista:</Text>
-                    <DateTimePicker
-                      value={
-                        selectedAnswers[pregunta.id]?.fechaPrevista || new Date()
-                      }
-                      mode="date"
-                      display="default"
-                      onChange={(event, date) =>
-                        onChangeFechaPrevista(pregunta.id, event, date)
-                      }
-                    />
-                  </View>
-
                   <TouchableOpacity
                     onPress={() => tomarFoto(pregunta.id)}
                     style={styles.button}
@@ -392,16 +367,9 @@ const InformeAH = ({ route, navigation }) => {
                     style={styles.input}
                     placeholder="Observaciones"
                     placeholderTextColor={COLORS.gray}
+                    value={selectedAnswers[pregunta.id]?.observaciones || ""}
                     onChangeText={(text) =>
-                      handleAnswerChange(pregunta.id, text, "observaciones")
-                    }
-                  />
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Responsable"
-                    placeholderTextColor={COLORS.gray}
-                    onChangeText={(text) =>
-                      handleAnswerChange(pregunta.id, text, "responsable")
+                      handleObservationChange(pregunta.id, text)
                     }
                   />
                 </View>
@@ -460,22 +428,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   inputContainer: {
-    flexDirection:"row",
+    flexDirection: "row",
     marginBottom: 20,
   },
   label: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
-  },
-  dateButton: {
-    backgroundColor: COLORS.primary,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  dateText: {
-    color: COLORS.white,
   },
   observacionesContainer: {
     paddingHorizontal: 16,

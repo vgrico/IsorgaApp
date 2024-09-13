@@ -86,6 +86,7 @@ import CambiarCentros from "../screens/General/CambiarCentros";
 import Auditorias from "../screens/Auditorias/Auditorias";
 import Auditoria from "../screens/Auditorias/Auditoria";
 import NuevaRuta from "../screens/Auditorias/NuevaRuta";
+import Informe5sRespondido from "../screens/Informes/Informe5sRespondido";
 
 
 
@@ -180,6 +181,7 @@ const AppNavigation = () => {
         <Stack.Screen name="InformeStandard" component={InformeStandard} />
         <Stack.Screen name="InformeAH" component={InformeAH} />
         <Stack.Screen name="Informe5s" component={Informe5s} />
+        <Stack.Screen name="Informe5sRespondido" component={Informe5sRespondido} />
         
 
         <Stack.Screen name="Equipos" component={Equipos} />
