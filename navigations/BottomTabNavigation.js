@@ -151,7 +151,7 @@ const TabIcon = ({ focused, icon, label, iconComponent }) => (
         resizeMode="contain"
         style={[
           isLargeScreen ? styles.iconLarge : styles.icon,
-          { tintColor: focused ? COLORS.tertiary : COLORS.gray3 },
+          { tintColor: focused ? COLORS.primary : COLORS.gray3 },
         ]}
       />
     )}
@@ -160,7 +160,7 @@ const TabIcon = ({ focused, icon, label, iconComponent }) => (
         style={[
           styles.label,
           {
-            color: focused ? COLORS.tertiary : COLORS.gray3,
+            color: focused ? COLORS.primary : COLORS.gray3,
           },
         ]}
         numberOfLines={1}

@@ -16,14 +16,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.jmiguelgr.Isorga"
+      "bundleIdentifier": "com.jmiguelgr.Isorga",
+      "newArchEnabled": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/splashIsorga.png",
         "backgroundColor": "#584CF4"
       },
-      "package": "com.jmiguelgr.Isorga"
+      "package": "com.jmiguelgr.Isorga",
+      "newArchEnabled": true
     },
     "web": {
       "favicon": "./assets/images/splashIsorga.png"

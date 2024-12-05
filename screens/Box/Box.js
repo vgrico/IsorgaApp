@@ -95,18 +95,17 @@ const Box = ({ navigation }) => {
     "#D65076", // Pink
   ];
 
-  const renderModulo = ({ item, index }) => {
-    const imageSource = require("../../assets/images/carpeta.webp");
-    console.log("Render item:", item);
-    const backgroundColor = colorPalette[index % colorPalette.length]; // Cicla los colores si hay más cajas que colores
-
+  const renderModulo = ({ item }) => {
     return (
       <TouchableOpacity
-        style={[styles.moduloContainer, { backgroundColor }]}
+        style={styles.folderContainer}
         onPress={() => navigation.navigate("ListadoBox", { id: item.id })}
       >
-        <View style={styles.overlay}>
-          <Text style={styles.moduloTexto}>{item.titulo}</Text>
+        <View style={styles.folderTop}>
+          <View style={styles.folderTab} />
+        </View>
+        <View style={styles.folderBottom}>
+          <Text style={styles.folderLabel}>{item.titulo}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -131,7 +130,7 @@ const Box = ({ navigation }) => {
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: "#F9F9F9", // Fondo claro para mayor contraste
   },
   headerContainer: {
     flexDirection: "row",
@@ -139,54 +138,80 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingTop: 20,
+    backgroundColor: "#3E3E3E",
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
+    paddingVertical: 10,
   },
   headerTitle: {
     fontSize: SIZES.h3,
     fontWeight: "bold",
     marginLeft: 16,
+    color: "#FFFFFF",
   },
-  moduloContainer: {
+  folderContainer: {
     width: "45%",
     height: 150,
     margin: 10,
-    borderRadius: 15,
+    borderRadius: 10,
+    backgroundColor: "#FFFFFF", // Fondo blanco para resaltar las carpetas
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 4,
+    elevation: 4,
     overflow: "hidden",
+    borderWidth: 1,
+    borderColor: COLORS.primary, // Cambiado a COLORS.primary
+  },
+  folderTop: {
+    flex: 2,
+    backgroundColor: "#D9D9D9", // Color más claro para la pestaña superior
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+  folderTab: {
+    width: 30,
+    height: 6,
+    backgroundColor: "#B0B0B0", // Más contraste para la pestaña
+    borderRadius: 3,
+    alignSelf: "flex-start",
+    marginBottom: 5,
+  },
+  folderBottom: {
+    flex: 3,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.grayscale100,
+    paddingHorizontal: 10,
   },
-  moduloImagen: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-  },
-  moduloTexto: {
-    fontSize: SIZES.h5,
-    color: COLORS.greyscale900,
-    fontWeight: "semibold",
+  folderLabel: {
+    fontSize: SIZES.h4, // Texto grande para destacar
+    fontWeight: "700",
+    color: "#3E3E3E",
     textAlign: "center",
-    textTransform: "uppercase",
+    textTransform: "capitalize",
+    marginTop: 10,
   },
   horizontalLine: {
-    borderBottomColor: COLORS.black,
+    borderBottomColor: "#D0D0D0",
     borderBottomWidth: 1,
     marginVertical: 10,
   },
+  flatListContent: {
+    paddingBottom: 75,
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+  },
   logo: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     resizeMode: "contain",
   },
 });
+
+
 
 export default Box;

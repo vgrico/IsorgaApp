@@ -69,16 +69,16 @@ const Inicio = ({ route, navigation }) => {
   }, [userId, centroId]);
 
   const colorPalette = [
-    '#88B04B', // Green
-    '#F7CAC9', // Rose
-    '#92A8D1', // Blue
-    '#009B77', // Teal
-    '#FF6F61', // Coral
-    '#6B5B95', // Plum
-    '#955251', // Mauve
-    '#B565A7', // Violet
-    '#D65076', // Pink
-    '#DD4124', // Red
+    "#88B04B", // Green
+    "#F7CAC9", // Rose
+    "#92A8D1", // Blue
+    "#009B77", // Teal
+    "#FF6F61", // Coral
+    "#6B5B95", // Plum
+    "#955251", // Mauve
+    "#B565A7", // Violet
+    "#D65076", // Pink
+    "#DD4124", // Red
   ];
 
   const fetchModulosUsuario = async () => {
@@ -118,7 +118,6 @@ const Inicio = ({ route, navigation }) => {
     );
   }
 
-
   const renderHeader = () => (
     <View style={styles.headerContainer}>
       <Image
@@ -130,20 +129,19 @@ const Inicio = ({ route, navigation }) => {
   );
 
   const renderModulo = ({ item, index }) => {
-  const backgroundColor = colorPalette[index % colorPalette.length]; // Cicla los colores si hay más cajas que colores
+    const backgroundColor = colorPalette[index % colorPalette.length]; // Cicla los colores si hay más cajas que colores
 
-  return (
-    <TouchableOpacity
-      style={[styles.moduloContainer, { backgroundColor }]}
-      onPress={() => navigation.navigate(item.pantalla)}
-    >
-      <View style={styles.overlay}>
-        <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
-      </View>
-    </TouchableOpacity>
-  );
-};
-
+    return (
+      <TouchableOpacity
+        style={[styles.moduloContainer, { backgroundColor }]}
+        onPress={() => navigation.navigate(item.pantalla)}
+      >
+        <View style={styles.overlay}>
+          <Text style={styles.moduloTexto}>{item.moduloTexto}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.area}>
@@ -155,7 +153,7 @@ const Inicio = ({ route, navigation }) => {
         renderItem={renderModulo}
         keyExtractor={(item) => item.moduloId.toString()}
         numColumns={2}
-        contentContainerStyle={[styles.flatListContent, { paddingBottom: 75 }]}  // Añadir paddingBottom para el último elemento
+        contentContainerStyle={[styles.flatListContent, { paddingBottom: 75 }]} // Añadir paddingBottom para el último elemento
         columnWrapperStyle={styles.columnWrapper}
       />
     </SafeAreaView>
@@ -165,12 +163,13 @@ const Inicio = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   area: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: "#F9F9F9",
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "#F9F9F9",
   },
   headerContainer: {
     flexDirection: "row",
@@ -178,115 +177,55 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 16,
     paddingTop: 20,
+    backgroundColor: "#3E3E3E",
+    paddingVertical: 15,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
   },
   headerTitle: {
-    fontSize: SIZES.h3,
+    fontSize: 24,
     fontWeight: "bold",
-    marginLeft: 16,
+    color: "#FFFFFF",
   },
-  backIcon: {
-    height: 24,
-    width: 24,
+  logo: {
+    width: 60,
+    height: 60,
+    resizeMode: "contain",
+    marginRight: 10,
   },
   moduloContainer: {
     width: "45%",
-    height: 150,
     margin: 10,
     borderRadius: 15,
-    overflow: "hidden",
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    elevation: 3,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: COLORS.grayscale100,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#E0E0E0",
   },
-  moduloImagen: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-  },
-  header: {
-    padding: 16,
-  },
-  centroNombre: {
-    fontSize: 20,
-    paddingHorizontal: 50,
-    fontWeight: "bold",
-  },
-  centroModulos: {
-    fontSize: 15,
-    fontWeight: "bold",
+  moduloTexto: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#333333",
+    textAlign: "center",
   },
   flatListContent: {
     paddingHorizontal: 16,
   },
   columnWrapper: {
     justifyContent: "space-between",
-    marginBottom: 5,
+    marginBottom: 10,
   },
   horizontalLine: {
-    borderBottomColor: COLORS.black,
+    borderBottomColor: "#E0E0E0",
     borderBottomWidth: 1,
     marginVertical: 10,
-  },
-  container: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  dateText: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  logo: {
-    width: 70,
-    height: 70,
-    resizeMode: "contain",
-  },
-  moduloLogo: {
-    width: 50,
-    height: 50,
-    marginBottom: 15,
-    resizeMode: "contain",
-  },
-  moduloContainer: {
-    width: "45%",
-    height: 150,
-    margin: 5,
-    borderRadius: 15,
-    overflow: "hidden",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: COLORS.grayscale100, // Este color será sobrescrito por el color dinámico
-  },
-  moduloImagen: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
-  },
-  overlay: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-  },
-  moduloTexto: {
-    fontSize: SIZES.h5,
-    color: COLORS.greyscale900,
-    fontWeight: "semibold",
-    textAlign: "center",
-    textTransform: "uppercase",
   },
 });
 
